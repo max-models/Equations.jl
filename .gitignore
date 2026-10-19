@@ -1,6 +1,5 @@
 Manifest.toml
 Manifest-v*.toml
-/docs/build/
 /coverage/
 *.jl.cov
 *.jl.*.cov

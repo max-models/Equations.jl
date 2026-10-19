@@ -7,6 +7,7 @@ using Test
     include("system.jl")
     include("solve.jl")
     include("show.jl")
+    include("doctests.jl")
     @testset "Extensions" begin
         include("ext/forwarddiff.jl")
         include("ext/jump.jl")

@@ -1,7 +1,7 @@
 # Equations.jl
 
 [![CI](https://github.com/max-models/Equations.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/max-models/Equations.jl/actions/workflows/CI.yml)
-[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://max-models.github.io/Equations.jl/dev/)
+[![Docs](https://img.shields.io/badge/docs-site-blue.svg)](https://max-models.github.io/Equations.jl/)
 [![Aqua QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/JuliaTesting/Aqua.jl)
 
 There are too many XYZEquations.jl packages out there, it would obviously be better to have one package that solves all equations
@@ -53,11 +53,17 @@ Package extensions load automatically together with the corresponding package:
 Symbolics.jl also exports `Equation` and `Inequality`; when both packages are
 loaded, write `Equations.Equation` and `Equations.Inequality`.
 
+## Documentation
+
+The site at <https://max-models.github.io/Equations.jl/> has a guide, a gallery of
+[examples](examples/) run at build time, and the API reference. It is built with the shared
+[max-models starlight-theme](https://github.com/max-models/starlight-theme); see
+[Building the docs](https://max-models.github.io/Equations.jl/development/docs/) to preview it
+locally or add an example.
+
 ## Development
 
 ```julia
 julia> ] activate .
 julia> ] test
 ```
-
-Documentation is built with `julia --project=docs docs/make.jl`.

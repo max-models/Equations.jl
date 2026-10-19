@@ -1,0 +1,19 @@
+{
+  "name": "equations-jl-docs",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "scripts": {
+    "generate": "julia --project=. generate.jl",
+    "dev": "julia --project=. generate.jl && DOCS_VALIDATE_LINKS=false astro dev",
+    "build": "julia --project=. generate.jl && starlight-check-mdx && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.42.6",
+    "@max-models/starlight-theme": "github:max-models/starlight-theme#v0.3.1",
+    "astro": "^7.3.8",
+    "sharp": "^0.35.3"
+  }
+}
