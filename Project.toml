@@ -1,0 +1,46 @@
+name = "Equations"
+uuid = "40f55cdf-ace9-4625-a5da-d38c3b2292f1"
+authors = ["Equations.jl contributors"]
+version = "0.1.0"
+
+[deps]
+ADTypes = "47edcb42-4c32-4615-8424-f2b9edc5f35b"
+CommonSolve = "38540f10-b2f7-11e9-35d8-d573e4eb0ff2"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[weakdeps]
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+NonlinearSolve = "8913a72c-1f9b-4ce2-8d82-65094dcecaec"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+
+[extensions]
+EquationsForwardDiffExt = "ForwardDiff"
+EquationsJuMPExt = "JuMP"
+EquationsNonlinearSolveExt = "NonlinearSolve"
+EquationsSymbolicsExt = "Symbolics"
+
+[compat]
+ADTypes = "1"
+Aqua = "0.8"
+CommonSolve = "0.2"
+ForwardDiff = "0.10, 1"
+JET = "0.9, 0.10, 0.11, 0.12"
+JuMP = "1"
+LinearAlgebra = "1"
+NonlinearSolve = "4"
+Symbolics = "6, 7"
+Test = "1"
+julia = "1.10"
+
+[extras]
+Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+NonlinearSolve = "8913a72c-1f9b-4ce2-8d82-65094dcecaec"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Aqua", "ForwardDiff", "JET", "JuMP", "NonlinearSolve", "Symbolics", "Test"]

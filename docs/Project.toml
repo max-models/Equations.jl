@@ -1,0 +1,9 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+Equations = "40f55cdf-ace9-4625-a5da-d38c3b2292f1"
+
+[sources]
+Equations = {path = "/home/user/Equations.jl"}
+
+[compat]
+Documenter = "1"
