@@ -64,6 +64,123 @@ Package extensions load automatically together with the corresponding package:
 Symbolics.jl also exports `Equation` and `Inequality`; when both packages are
 loaded, write `Equations.Equation` and `Equations.Inequality`.
 
+## Map of mathematics
+
+The goal is one package that solves all equations. This map lists the kinds of equations across
+mathematics and ticks the ones Equations.jl can solve today; an unticked item with a note is
+partly there. Items marked *(roadmap n)* are the next planned steps.
+
+### Representing equations
+- [x] Equations and inequalities (`=`, `≠`, `<`, `≤`, `>`, `≥`) between numbers, arrays and functions
+- [x] Systems of equations and inequalities
+- [x] Named unknowns
+- [x] Algebra on relations: arithmetic on both sides, adding relations, canonical form `g ≤ 0`, `h = 0`
+- [x] Symbolic sides (Symbolics.jl) and optimization-model sides (JuMP.jl)
+- [ ] Parameters (`f(x, p)`) and solving for a chosen unknown in terms of the others
+- [ ] Units (Unitful.jl)
+
+### Algebraic equations
+- [x] Linear systems, dense and sparse, direct and iterative (LinearSolve.jl)
+- [x] Overdetermined linear systems (least squares)
+- [ ] Underdetermined linear systems: minimum-norm solution and the full solution set (null space)
+- [x] Scalar nonlinear equations from a starting point (Newton, Roots.jl)
+- [x] Scalar nonlinear equations on a bracket, with guaranteed convergence (bisection, Brent, …)
+- [x] Nonlinear systems (Newton with line search, NonlinearSolve.jl)
+- [x] Overdetermined nonlinear systems (Gauss–Newton, nonlinear least squares)
+- [x] All complex roots of a polynomial (Polynomials.jl)
+- [x] All solutions of a polynomial system (HomotopyContinuation.jl)
+- [ ] All roots in a region, proven complete (interval methods) *(roadmap 8)*
+- [ ] All roots in an interval, including roots without a sign change (partly: `AllRoots` finds the sign changes)
+- [ ] Fixed-point equations `x = g(x)` (Anderson acceleration)
+- [ ] Equations over complex unknowns
+- [ ] Equations with matrix unknowns: Sylvester, Lyapunov, algebraic Riccati
+- [ ] Eigenvalue problems `A x = λ x`, generalized and nonlinear
+- [ ] Parametric systems and continuation, bifurcation diagrams (BifurcationKit.jl)
+
+### Symbolic and exact
+- [ ] Closed-form solutions (`x^2 ~ 2` → `±√2`) *(roadmap 5)*
+- [ ] Exact rational and integer linear algebra
+- [ ] Diophantine equations: linear, Pell, Pythagorean triples
+- [ ] Modular equations and congruences, Chinese remainder theorem
+- [ ] Equations over finite fields
+- [ ] Gröbner bases for polynomial systems
+
+### Inequalities and optimization
+- [x] Checking inequalities on a solution (`issatisfied`)
+- [ ] Feasibility: find a point satisfying a system of inequalities *(roadmap 6)*
+- [ ] Linear programming (partly: relations become JuMP constraints with `add_constraint!`)
+- [ ] Nonlinear optimization with equality and inequality constraints *(roadmap 6)*
+- [ ] Mixed-integer problems
+- [ ] Complementarity problems and variational inequalities
+- [ ] Semidefinite and conic constraints
+
+### Differential equations
+- [ ] Ordinary differential equations, initial value problems *(roadmap 7)*
+- [ ] Boundary value problems (partly: by discretizing by hand, see the sparse Poisson example)
+- [ ] Differential-algebraic equations
+- [ ] Delay differential equations
+- [ ] Stochastic differential equations
+- [ ] Partial differential equations: elliptic, parabolic, hyperbolic *(roadmap 9)*
+- [ ] Eigenvalue problems for differential operators (Sturm–Liouville, Schrödinger)
+- [ ] Fractional differential equations
+- [ ] Hamiltonian, Lagrangian and other structure-preserving integration: see *Geometric numerical integration* below
+
+### Geometric numerical integration
+Structure-preserving integrators keep the geometry of a problem (symplecticity, energy, momenta,
+constraints) over long times. The [JuliaGNI](https://github.com/JuliaGNI) packages by Michael Kraus
+cover this field; the equation types are those of GeometricEquations.jl, solved with
+GeometricIntegrators.jl.
+- [ ] Ordinary and implicit ODEs (`ODE`, `IODE`) with GeometricIntegrators.jl and the Runge–Kutta tableaus of RungeKutta.jl
+- [ ] Partitioned and Hamiltonian ODEs (`PODE`, `HODE`): symplectic and partitioned Runge–Kutta, Gauss–Legendre
+- [ ] Lagrangian ODEs (`LODE`) and variational integrators (VPRK, degenerate variational integrators)
+- [ ] Euler–Lagrange and Hamilton's equations generated from a Lagrangian or Hamiltonian (EulerLagrange.jl)
+- [ ] Discrete Euler–Lagrange equations (`DELE`)
+- [ ] Split ODEs (`SODE`): splitting and composition methods (Lie–Trotter, Strang, higher order)
+- [ ] Constrained systems (`DAE`, `PDAE`, `HDAE`, `IDAE`, `LDAE`): SPARK methods and projections onto the constraints
+- [ ] Stochastic systems (`SDE`, `PSDE`, `SPSDE`): stochastic symplectic and variational integrators (StochasticIntegrators.jl)
+- [ ] Integrators with nonlinear, e.g. neural-network, bases in time (NonlinearIntegrators.jl)
+- [ ] Invariants: energy, momenta and Casimirs, and their long-time behaviour
+- [ ] Poincaré integral invariants (PoincareInvariants.jl)
+- [ ] Hamiltonian PDEs through discretised Poisson brackets (GeometricBrackets.jl)
+- [ ] Ensembles of initial conditions and parameters
+- [ ] The test problems of GeometricProblems.jl (harmonic oscillator, pendulum, Kepler, Lotka–Volterra, …) as examples
+- [ ] Structure-preserving learned models: symplectic networks, symplectic autoencoders (GeometricMachineLearning.jl)
+- [ ] SimpleSolvers.jl as a nonlinear-solver backend for `solve`
+
+### Differential geometry
+- [ ] Equations whose unknowns live on manifolds: spheres, rotation groups, Stiefel and Grassmann manifolds (Manifolds.jl)
+- [ ] Optimization on manifolds (Manopt.jl; GeometricOptimizers.jl for Stiefel and Grassmann)
+- [ ] ODEs on Lie groups and homogeneous spaces: Lie group integrators, Runge–Kutta–Munthe-Kaas, Crouch–Grossman (LieGroups.jl)
+- [ ] Geodesic equations: initial value (exponential map) and boundary value (logarithm map) problems
+- [ ] Connections, parallel transport and curvature: Christoffel symbols and the Riemann tensor from a metric
+- [ ] Hamiltonian mechanics on symplectic and Poisson manifolds: Poisson brackets, Casimirs, momentum maps
+- [ ] Differential forms and exterior calculus; discrete exterior calculus for PDEs on meshes (CombinatorialSpaces.jl, Decapodes.jl)
+- [ ] Geometric algebra (Grassmann.jl)
+- [ ] Geometric PDEs: harmonic maps, minimal surfaces, mean curvature and Ricci flow, Einstein's field equations
+
+### Plasma physics
+The [JuliaPlasma](https://github.com/JuliaPlasma) packages build on the geometric integrators.
+- [ ] Charged-particle and guiding-centre dynamics in electromagnetic fields (ChargedParticleDynamics.jl, ElectromagneticFields.jl)
+- [ ] The Vlasov equation: particle, grid-based and reduced-basis methods (VlasovMethods.jl, ParticleMethods.jl)
+- [ ] Particle-in-cell simulation (ParticleInCell.jl)
+- [ ] The Poisson equation, spectral and B-spline Galerkin (PoissonSolvers.jl, SimpleSplines.jl)
+
+### Integral and functional equations
+- [ ] Fredholm and Volterra integral equations (quadrature from QuadratureRules.jl)
+- [ ] Integro-differential equations
+- [ ] Difference equations and recurrences, closed forms of linear recurrences
+- [ ] Functional equations (`f(x + y) = f(x) f(y)`, …)
+
+### Calculus of variations and control
+- [ ] Euler–Lagrange equations from a functional (for mechanics: EulerLagrange.jl, below)
+- [ ] Optimal control problems
+- [ ] Hamilton–Jacobi–Bellman equations
+
+### Logic and discrete
+- [ ] Boolean equations and satisfiability (SAT)
+- [ ] Constraint satisfaction over finite domains
+- [ ] Graph equations: flows, matchings, shortest paths as optimality conditions
+
 ## Documentation
 
 The site at <https://max-models.github.io/Equations.jl/> has a guide, a gallery of
