@@ -3,7 +3,7 @@
 # Find where a planet is on its orbit, comparing finite differences, ForwardDiff.jl and NonlinearSolve.jl.
 #
 # thumbnail: E − e sin E = M
-# order: 5
+# order: 6
 #
 # A body on an elliptic orbit with eccentricity $e$ is at eccentric anomaly $E$ at mean anomaly
 # $M$, where
@@ -40,6 +40,15 @@ tr = solve(eq, M, TrustRegion())
 # All three agree, and the default tolerance of `NewtonMethod` is a residual of $10^{-10}$:
 
 fd.u ≈ ad.u ≈ tr.u, issatisfied(eq, ad.u; atol=1e-10)
+
+# Or with Roots.jl: its bracketing methods converge from a bracket like bisection does, but in far
+# fewer steps. $E$ lies in $[0, 2\pi]$:
+
+using Roots
+
+br = solve(eq, (0, 2π), Roots.Brent())
+bi = solve(eq, (0, 2π))
+br.u ≈ bi.u, br.iterations, bi.iterations
 
 # ## A whole orbit
 #
