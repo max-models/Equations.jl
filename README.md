@@ -57,7 +57,7 @@ Package extensions load automatically together with the corresponding package:
 | Roots.jl         | `solve(eq, (a, b), Roots.Brent())`, or any other Roots method for scalar equations |
 | Polynomials.jl   | Polynomial sides, and `solve(eq, AllRoots())` for all their complex roots        |
 | HomotopyContinuation.jl | `AllRoots()` for all solutions of polynomial systems                      |
-| Symbolics.jl     | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution |
+| Symbolics.jl     | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution, and `ClosedForm()` for exact solutions |
 | JuMP.jl          | `add_constraint!(model, relation_or_system)`                                     |
 
 `solve` is `CommonSolve.solve`, so it does not clash with the SciML ecosystem.
@@ -100,12 +100,12 @@ partly there. Items marked *(roadmap n)* are the next planned steps.
 - [ ] Parametric systems and continuation, bifurcation diagrams (BifurcationKit.jl)
 
 ### Symbolic and exact
-- [ ] Closed-form solutions (`x^2 ~ 2` → `±√2`) *(roadmap 5)*
+- [x] Closed-form solutions (`x^2 = 2` → `±√2`), for what Symbolics.jl's `symbolic_solve` can solve (`ClosedForm()`)
 - [ ] Exact rational and integer linear algebra
 - [ ] Diophantine equations: linear, Pell, Pythagorean triples
 - [ ] Modular equations and congruences, Chinese remainder theorem
 - [ ] Equations over finite fields
-- [ ] Gröbner bases for polynomial systems
+- [ ] Gröbner bases for polynomial systems (partly: `ClosedForm()` uses them, through Groebner.jl, to solve polynomial systems)
 
 ### Inequalities and optimization
 - [x] Checking inequalities on a solution (`issatisfied`)

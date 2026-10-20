@@ -241,7 +241,7 @@ const API_SECTIONS = [
     "Systems" => [:EquationSystem, :equalities, :inequalities],
     "Problems" => [:EquationProblem, :unknowns, :residual_function, :Linear, :linear_system],
     "Solving" => [:solve, :default_algorithm, :Solution, :AbstractEquationAlgorithm, :NewtonMethod,
-        :Bisection, :DirectLinear, :AllRoots],
+        :Bisection, :DirectLinear, :AllRoots, :ClosedForm],
     "Lean 4" => [:lean, :leanvariables, :lean_theorem, :lean_check, :lean_file],
     "Integrations" => [:add_constraint!],
     "Internals" => [:evaluate, :jacobian, :basefunction, :flip],

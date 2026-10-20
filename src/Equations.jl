@@ -19,7 +19,7 @@ export lhs, rhs, comparison, isequality, isinequality
 export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
 export EquationProblem, Linear, unknowns, residual_function, linear_system
-export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, Solution
+export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, ClosedForm, Solution
 export add_constraint!
 export lean, leanvariables, lean_theorem, lean_check, lean_file
 export AutoFiniteDiff, AutoForwardDiff

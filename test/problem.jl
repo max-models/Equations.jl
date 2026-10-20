@@ -92,6 +92,10 @@
         @test_throws ArgumentError solve(EquationSystem(Equation(x -> x, 0), Equation(x -> x, 0)), (-1, 1), AllRoots())
     end
 
+    @testset "ClosedForm without Symbolics" begin
+        @test_throws ArgumentError Equations._closed_form(EquationProblem(Equation(x -> x, 1), 0.0), ClosedForm())
+    end
+
     @testset "Singular Jacobian" begin
         sol = solve(Equation(x -> x^2, -1), 0.0)
         @test sol.retcode === :Failure

@@ -3,7 +3,7 @@
 # Relations between Symbolics.jl expressions: substitute values, canonicalize, convert both ways.
 #
 # thumbnail: x² + y ≲ 1
-# order: 9
+# order: 10
 #
 # Symbolics.jl also exports `Equation` and `Inequality`, so with both packages loaded those two
 # names are qualified as `Equations.Equation` and `Equations.Inequality`.
