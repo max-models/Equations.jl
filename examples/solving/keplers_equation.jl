@@ -3,7 +3,7 @@
 # Find where a planet is on its orbit, comparing finite differences, ForwardDiff.jl and NonlinearSolve.jl.
 #
 # thumbnail: E − e sin E = M
-# order: 5
+# order: 6
 #
 # A body on an elliptic orbit with eccentricity $e$ is at eccentric anomaly $E$ at mean anomaly
 # $M$, where

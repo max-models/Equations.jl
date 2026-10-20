@@ -3,7 +3,7 @@
 # Solve a system of two nonlinear equations; different starting points find different solutions.
 #
 # thumbnail: x² + y² = 1, y = x/2
-# order: 4
+# order: 5
 #
 # The circle $x^2 + y^2 = 1$ meets the line $y = x/2$ in two points,
 # $\pm(2, 1)/\sqrt{5}$.

@@ -5,25 +5,28 @@ One package for working with equations — and, more generally, relations such a
 inequalities — independent of what the two sides are made of: numbers, arrays,
 plain Julia functions, symbolic expressions or optimization-model expressions.
 
-See [`Relation`](@ref), [`EquationSystem`](@ref) and [`solve`](@ref).
+See [`Relation`](@ref), [`EquationSystem`](@ref), [`EquationProblem`](@ref) and [`solve`](@ref).
 """
 module Equations
 
 using ADTypes: ADTypes, AutoFiniteDiff, AutoForwardDiff
 using CommonSolve: CommonSolve, solve
-using LinearAlgebra: norm
+using LinearAlgebra: SingularException, norm
 
 export AbstractRelation, Relation, Equation, Inequality, @relation
 export Comparison, EqualTo, NotEqualTo, LessThan, LessEqual, GreaterThan, GreaterEqual
 export lhs, rhs, comparison, isequality, isinequality
 export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
-export solve, NewtonMethod, Solution, add_constraint!
+export EquationProblem, Linear, unknowns, residual_function
+export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, Solution
+export add_constraint!
 export AutoFiniteDiff, AutoForwardDiff
 
 include("relations.jl")
 include("operations.jl")
 include("system.jl")
+include("problem.jl")
 include("solve.jl")
 include("show.jl")
 include("interfaces.jl")

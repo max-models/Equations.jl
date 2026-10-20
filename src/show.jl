@@ -16,6 +16,7 @@ Base.show(io::IO, c::Comparison) = print(io, symbol(c))
 
 # Function sides print as calls: named functions by name, anonymous ones as `f(x)` (lhs) and `g(x)` (rhs).
 _side(side, _) = side
+_side(::Linear, ::Symbol) = "A*x"
 _side(f::Function, default::Symbol) = string(startswith(string(nameof(f)), '#') ? default : nameof(f), "(x)")
 
 function Base.show(io::IO, r::Relation)
@@ -35,7 +36,18 @@ function Base.show(io::IO, ::MIME"text/plain", sys::EquationSystem)
 end
 
 function Base.show(io::IO, ::MIME"text/plain", sol::Solution)
-    println(io, "Solution (retcode: ", sol.retcode, ", iterations: ", sol.iterations,
+    println(io, "Solution (", nameof(typeof(sol.alg)), ", retcode: ", sol.retcode, ", iterations: ", sol.iterations,
         ", residual norm: ", sol.residual_norm, ")")
     print(io, "u: ", sol.u)
+end
+
+function Base.show(io::IO, ::MIME"text/plain", prob::EquationProblem)
+    println(io, "EquationProblem with unknowns ", unknowns(prob), " and starting values ", prob.u0)
+    show(io, MIME"text/plain"(), prob.system)
+end
+
+# Algorithms print as their keyword constructors, e.g. `Bisection(abstol=0.0, maxiters=1000)`.
+function Base.show(io::IO, alg::AbstractEquationAlgorithm)
+    fields = fieldnames(typeof(alg))
+    print(io, nameof(typeof(alg)), "(", join(("$f=$(repr(getfield(alg, f)))" for f in fields), ", "), ")")
 end

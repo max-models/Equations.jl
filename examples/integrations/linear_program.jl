@@ -3,7 +3,7 @@
 # Write the constraints of a JuMP model as relations, solve it with HiGHS, and check the answer.
 #
 # thumbnail: max 3x + 2y  s.t.  x + y ≤ 4
-# order: 7
+# order: 8
 #
 # A workshop makes tables ($x$) and chairs ($y$) and wants the largest profit $3x + 2y$ with four
 # days of work, ten units of wood and at least as many chairs as half the tables.

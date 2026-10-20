@@ -36,6 +36,12 @@ solve(eq, 1.0).u                                   # ≈ 1.41421
 sys = EquationSystem(Equation(x -> x[1]^2 + x[2]^2, 1),
                      Equation(x -> x[1], x -> x[2]))
 solve(sys, [1.0, 0.5]).u                           # ≈ [0.70711, 0.70711]
+
+# The starting values pick the unknowns, and solve picks the algorithm
+solve(Equation(cos, 0), (0, 2)).u                  # bracket → Bisection: π/2
+rect = EquationSystem(Equation(u -> u.w * u.h, 12), Equation(u -> 2u.w + 2u.h, 14))
+solve(rect, (w=5.0, h=1.0)).u                      # named unknowns: ≈ (w = 4.0, h = 3.0)
+solve(Equation(Linear([2.0 1.0; 1.0 3.0]), [3.0, 5.0]), zeros(2)).u   # linear → DirectLinear: [0.8, 1.4]
 ```
 
 ## Integrations
