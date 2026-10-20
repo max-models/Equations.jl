@@ -43,6 +43,11 @@ rect = EquationSystem(Equation(u -> u.w * u.h, 12), Equation(u -> 2u.w + 2u.h, 1
 solve(rect, (w=5.0, h=1.0)).u                      # named unknowns: ≈ (w = 4.0, h = 3.0)
 solve(Equation(Linear([2.0 1.0; 1.0 3.0]), [3.0, 5.0]), zeros(2)).u   # linear → DirectLinear: [0.8, 1.4]
 solve(Equation(sin, 0), (-1, 7), AllRoots()).u     # every root in the bracket: [0, π, 2π]
+
+# Evolution equations and Hamiltonian systems
+solve(Equation(∂ₜ, (t, u) -> -u), 1.0, (0.0, 1.0); dt=0.1).u[end]          # ≈ exp(-1)
+oscillator = Equation(∂ₜ, Hamiltonian((t, q, p) -> p^2 / 2 + q^2 / 2))
+solve(oscillator, (q=1.0, p=0.0), (0.0, 1000.0); dt=0.1)   # symplectic midpoint rule
 ```
 
 ## Integrations
@@ -57,12 +62,14 @@ Package extensions load automatically together with the corresponding package:
 | Roots.jl         | `solve(eq, (a, b), Roots.Brent())`, or any other Roots method for scalar equations |
 | Polynomials.jl   | Polynomial sides, and `solve(eq, AllRoots())` for all their complex roots        |
 | HomotopyContinuation.jl | `AllRoots()` for all solutions of polynomial systems                      |
+| GeometricIntegrators.jl | `solve(ivp, Gauss(2))`, `SymplecticEulerA()`, …: geometric integrators for evolution equations and Hamiltonian systems |
 | Symbolics.jl     | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution |
 | JuMP.jl          | `add_constraint!(model, relation_or_system)`                                     |
 
 `solve` is `CommonSolve.solve`, so it does not clash with the SciML ecosystem.
 Symbolics.jl also exports `Equation` and `Inequality`; when both packages are
-loaded, write `Equations.Equation` and `Equations.Inequality`.
+loaded, write `Equations.Equation` and `Equations.Inequality`. GeometricIntegrators.jl exports its own
+`EquationProblem` and `Solution`; with both loaded, write `Equations.EquationProblem` and `Equations.Solution`.
 
 ## Map of mathematics
 
@@ -115,7 +122,8 @@ partly there. Items marked *(roadmap n)* are the next planned steps.
 - [ ] Semidefinite and conic constraints
 
 ### Differential equations
-- [ ] Ordinary differential equations, initial value problems *(roadmap 7)*
+- [x] Ordinary differential equations, initial value problems, with a fixed time step (`Equation(∂ₜ, f)`; `RungeKutta4`, `MidpointRule`, GeometricIntegrators.jl)
+- [ ] Adaptive time stepping and stiff solvers (OrdinaryDiffEq.jl)
 - [ ] Boundary value problems (partly: by discretizing by hand, see the sparse Poisson example)
 - [ ] Differential-algebraic equations
 - [ ] Delay differential equations
@@ -130,8 +138,10 @@ Structure-preserving integrators keep the geometry of a problem (symplecticity, 
 constraints) over long times. The [JuliaGNI](https://github.com/JuliaGNI) packages by Michael Kraus
 cover this field; the equation types are those of GeometricEquations.jl, solved with
 GeometricIntegrators.jl.
-- [ ] Ordinary and implicit ODEs (`ODE`, `IODE`) with GeometricIntegrators.jl and the Runge–Kutta tableaus of RungeKutta.jl
-- [ ] Partitioned and Hamiltonian ODEs (`PODE`, `HODE`): symplectic and partitioned Runge–Kutta, Gauss–Legendre
+- [x] Ordinary ODEs (`ODE`) with GeometricIntegrators.jl and the Runge–Kutta tableaus of RungeKutta.jl
+- [ ] Implicit ODEs (`IODE`)
+- [x] Hamiltonian ODEs (`HODE`), from a Hamiltonian `H(t, q, p)`: symplectic and Gauss–Legendre Runge–Kutta, symplectic Euler, Lobatto IIIA–IIIB, the built-in midpoint rule
+- [ ] Partitioned ODEs (`PODE`) in general
 - [ ] Lagrangian ODEs (`LODE`) and variational integrators (VPRK, degenerate variational integrators)
 - [ ] Euler–Lagrange and Hamilton's equations generated from a Lagrangian or Hamiltonian (EulerLagrange.jl)
 - [ ] Discrete Euler–Lagrange equations (`DELE`)
@@ -139,7 +149,7 @@ GeometricIntegrators.jl.
 - [ ] Constrained systems (`DAE`, `PDAE`, `HDAE`, `IDAE`, `LDAE`): SPARK methods and projections onto the constraints
 - [ ] Stochastic systems (`SDE`, `PSDE`, `SPSDE`): stochastic symplectic and variational integrators (StochasticIntegrators.jl)
 - [ ] Integrators with nonlinear, e.g. neural-network, bases in time (NonlinearIntegrators.jl)
-- [ ] Invariants: energy, momenta and Casimirs, and their long-time behaviour
+- [ ] Invariants: energy, momenta and Casimirs, and their long-time behaviour (partly: computed by hand in the examples)
 - [ ] Poincaré integral invariants (PoincareInvariants.jl)
 - [ ] Hamiltonian PDEs through discretised Poisson brackets (GeometricBrackets.jl)
 - [ ] Ensembles of initial conditions and parameters
@@ -153,7 +163,7 @@ GeometricIntegrators.jl.
 - [ ] ODEs on Lie groups and homogeneous spaces: Lie group integrators, Runge–Kutta–Munthe-Kaas, Crouch–Grossman (LieGroups.jl)
 - [ ] Geodesic equations: initial value (exponential map) and boundary value (logarithm map) problems
 - [ ] Connections, parallel transport and curvature: Christoffel symbols and the Riemann tensor from a metric
-- [ ] Hamiltonian mechanics on symplectic and Poisson manifolds: Poisson brackets, Casimirs, momentum maps
+- [ ] Hamiltonian mechanics on symplectic and Poisson manifolds: Poisson brackets, Casimirs, momentum maps (partly: canonical Hamiltonian systems)
 - [ ] Differential forms and exterior calculus; discrete exterior calculus for PDEs on meshes (CombinatorialSpaces.jl, Decapodes.jl)
 - [ ] Geometric algebra (Grassmann.jl)
 - [ ] Geometric PDEs: harmonic maps, minimal surfaces, mean curvature and Ricci flow, Einstein's field equations

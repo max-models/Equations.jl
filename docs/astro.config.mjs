@@ -22,6 +22,7 @@ export default defineDocs({
 			items: [
 				{ label: 'Relations', slug: 'guide/relations' },
 				{ label: 'Systems and solving', slug: 'guide/solving' },
+				{ label: 'Evolution equations', slug: 'guide/evolution' },
 				{ label: 'Integrations', slug: 'guide/integrations' },
 			],
 		},

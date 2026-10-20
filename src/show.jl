@@ -17,10 +17,19 @@ Base.show(io::IO, c::Comparison) = print(io, symbol(c))
 # Function sides print as calls: named functions by name, anonymous ones as `f(x)` (lhs) and `g(x)` (rhs).
 _side(side, _) = side
 _side(::Linear, ::Symbol) = "A*x"
+_side(::TimeDerivative, ::Symbol) = "∂ₜu"
+_side(::Hamiltonian, ::Symbol) = "J∇H(q, p)"
 _side(f::Function, default::Symbol) = string(startswith(string(nameof(f)), '#') ? default : nameof(f), "(x)")
 
 function Base.show(io::IO, r::Relation)
     print(io, _side(r.lhs, :f), " ", symbol(comparison(r)), " ", _side(r.rhs, :g))
+end
+
+# Evolution equations: the right-hand side is a function of time and the unknowns.
+function Base.show(io::IO, r::Relation{EqualTo,TimeDerivative})
+    rhs = r.rhs isa Hamiltonian ? _side(r.rhs, :f) :
+          r.rhs isa Function && !startswith(string(nameof(r.rhs)), '#') ? string(nameof(r.rhs), "(t, u)") : "f(t, u)"
+    print(io, "∂ₜu = ", rhs)
 end
 
 function Base.show(io::IO, ::MIME"text/latex", r::Relation)
@@ -50,4 +59,16 @@ end
 function Base.show(io::IO, alg::AbstractEquationAlgorithm)
     fields = fieldnames(typeof(alg))
     print(io, nameof(typeof(alg)), "(", join(("$f=$(repr(getfield(alg, f)))" for f in fields), ", "), ")")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", sol::Trajectory)
+    println(io, "Trajectory (", nameof(typeof(sol.alg)), ", retcode: ", sol.retcode, ", ", length(sol.t) - 1,
+        " steps from t = ", first(sol.t), " to ", last(sol.t), ")")
+    print(io, "u(", last(sol.t), "): ", last(sol.u))
+end
+
+function Base.show(io::IO, ::MIME"text/plain", ivp::InitialValueProblem)
+    println(io, "InitialValueProblem from t = ", ivp.tspan[1], " to ", ivp.tspan[2], " with dt = ", ivp.dt)
+    println(io, "  ", ivp.equation)
+    print(io, "  u0 = ", ivp.u0)
 end
