@@ -31,3 +31,19 @@ using Equations, Symbolics, Test
 end
 
 end
+
+module LeanSymbolicsTests
+
+using Equations, Symbolics, Test
+
+@testset "Lean 4 from Symbolics" begin
+    @variables x y
+    @test lean(Relation(<=, x^2 + y^2, 1)) == "(x ^ 2 + y ^ 2 : ℝ) ≤ 1"
+    @test lean(sin(x)^2) == "Real.sin x ^ 2"
+    @test leanvariables(Relation(<=, x^2 + y^2, 1)) == [:x, :y]
+    sys = EquationSystem(Equations.Equation(x + y, 3), Equations.Equation(x - y, 1))
+    @test occursin("(2 + 1 : ℝ) = 3", lean_check(sys, Dict(x => 2, y => 1)))
+    @test occursin("(Real.sqrt 2 ^ 2 : ℝ) = 2", lean_check(Equations.Equation(x^2, 2), Dict(x => sqrt(Num(2)))))
+end
+
+end

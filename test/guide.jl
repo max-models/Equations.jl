@@ -47,9 +47,14 @@ end
         Core.eval(mod, :(using Equations))
         @testset "$(basename(file))" begin
             for (input, expected) in sessions
-                value = Core.eval(mod, Meta.parseall(input))
-                shown = endswith(input, ';') || value === nothing ? "" :
-                        strip(sprint(show, MIME"text/plain"(), value))
+                # what the REPL would show: the printed output, then the value
+                printed, value = mktemp() do path, io
+                    value = redirect_stdout(() -> Core.eval(mod, Meta.parseall(input)), io)
+                    close(io)
+                    read(path, String), value
+                end
+                shown = endswith(input, ';') || value === nothing ? "" : sprint(show, MIME"text/plain"(), value)
+                shown = strip(printed * shown)
                 @test matches(shown, expected)
                 matches(shown, expected) || println("in $(basename(file)):\n", input, "\nexpected:\n", expected, "\ngot:\n", shown)
             end

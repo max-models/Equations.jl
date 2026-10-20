@@ -8,6 +8,7 @@ using Test
     include("problem.jl")
     include("solve.jl")
     include("show.jl")
+    include("lean.jl")
     include("doctests.jl")
     include("guide.jl")
     @testset "Extensions" begin

@@ -23,6 +23,7 @@ export default defineDocs({
 				{ label: 'Relations', slug: 'guide/relations' },
 				{ label: 'Systems and solving', slug: 'guide/solving' },
 				{ label: 'Integrations', slug: 'guide/integrations' },
+				{ label: 'Lean 4', slug: 'guide/lean' },
 			],
 		},
 		{ label: 'Examples', items: [{ autogenerate: { directory: 'examples' } }] },

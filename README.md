@@ -78,6 +78,8 @@ partly there. Items marked *(roadmap n)* are the next planned steps.
 - [x] Symbolic sides (Symbolics.jl) and optimization-model sides (JuMP.jl)
 - [ ] Parameters (`f(x, p)`) and solving for a chosen unknown in terms of the others
 - [ ] Units (Unitful.jl)
+- [x] Lean 4 output: relations as Mathlib statements about real numbers, solutions as theorems (`lean`, `lean_theorem`, `lean_check`), checked against Mathlib in CI
+- [ ] Proofs beyond `norm_num`: tactics chosen for the statement, proofs of closed-form solutions
 
 ### Algebraic equations
 - [x] Linear systems, dense and sparse, direct and iterative (LinearSolve.jl)
@@ -180,6 +182,22 @@ The [JuliaPlasma](https://github.com/JuliaPlasma) packages build on the geometri
 - [ ] Boolean equations and satisfiability (SAT)
 - [ ] Constraint satisfaction over finite domains
 - [ ] Graph equations: flows, matchings, shortest paths as optimality conditions
+
+## Lean 4
+
+Relations can be written as Lean 4 statements about the real numbers with Mathlib, and solutions
+as theorems that Lean checks:
+
+```julia
+lean(Relation(:(x^2 + y^2 <= 1)))                      # "(x ^ 2 + y ^ 2 : ℝ) ≤ 1"
+sys = EquationSystem(Relation(:(x + y == 3)), Relation(:(x - y == 1)))
+print(lean_check(sys, (x=2, y=1)))
+# theorem solution_check :
+#     ((2 + 1 : ℝ) = 3) ∧ ((2 - 1 : ℝ) = 1) := by
+#   norm_num
+```
+
+The `Lean` workflow builds theorems generated from the examples (`lean/`) against Mathlib.
 
 ## Documentation
 

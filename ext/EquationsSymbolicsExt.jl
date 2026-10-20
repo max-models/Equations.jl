@@ -18,4 +18,10 @@ function Equations.Relation(ineq::Symbolics.Inequality)
     throw(ArgumentError("unsupported relational operator $(ineq.relational_op)"))
 end
 
+# Lean 4 output: symbolic expressions are written through their Julia expressions.
+Equations._lean(x::Num, context) = Equations._lean(Symbolics.toexpr(x), context)
+Equations._variables!(vars, x::Num) = Equations._variables!(vars, Symbolics.toexpr(x))
+Equations._substitute(x::Num, values) = Equations._substitute(Symbolics.toexpr(x), values)
+Equations._lean_key(k::Num) = Symbol(string(k))
+
 end

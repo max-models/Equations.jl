@@ -1,0 +1,12 @@
+# A Lean 4 project for the code Equations.jl generates: `generate.jl` writes the theorems into
+# EquationsLean/Generated.lean, and `lake build` checks them against Mathlib.
+name = "EquationsLean"
+defaultTargets = ["EquationsLean"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "master"
+
+[[lean_lib]]
+name = "EquationsLean"
