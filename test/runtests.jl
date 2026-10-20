@@ -19,16 +19,7 @@ using Test
         include("ext/linearsolve.jl")
         include("ext/roots.jl")
         include("ext/polynomials.jl")
-        # HomotopyContinuation runs in its own Julia process, which on Julia 1.10 compiles for
-        # Haswell (AVX2) instead of the host CPU: on some GitHub runners (AVX-512 with
-        # VP2INTERSECT), Julia 1.10's LLVM aborts compiling its solver for the host ("Do not know
-        # how to split the result of this operator").
-        @testset "HomotopyContinuation (separate process)" begin
-            script = joinpath(@__DIR__, "ext", "homotopycontinuation.jl")
-            cpu = VERSION < v"1.11" && Sys.ARCH === :x86_64 ? `-C haswell` : ``
-            cmd = `$(Base.julia_cmd()) $cpu --startup-file=no --project=$(Base.active_project()) $script`
-            @test success(pipeline(cmd; stdout, stderr))
-        end
+        include("ext/homotopycontinuation.jl")
     end
     include("quality.jl")
 end

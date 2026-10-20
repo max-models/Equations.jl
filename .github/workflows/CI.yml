@@ -31,7 +31,14 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.version }}
+      # Precompiled code is only valid on the CPU it was built for (HostCPUFeatures bakes in the
+      # host's features), so caches are keyed by the runner's CPU features.
+      - id: cpu
+        shell: bash
+        run: echo "features=$( (grep -m1 '^flags' /proc/cpuinfo || sysctl -n machdep.cpu.features machdep.cpu.leaf7_features || echo "$RUNNER_ARCH") 2>/dev/null | cksum | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
       - uses: julia-actions/cache@v2
+        with:
+          cache-name: julia-cache;workflow=${{ github.workflow }};job=${{ github.job }};cpu=${{ steps.cpu.outputs.features }}
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
