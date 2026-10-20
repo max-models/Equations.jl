@@ -64,6 +64,83 @@ Package extensions load automatically together with the corresponding package:
 Symbolics.jl also exports `Equation` and `Inequality`; when both packages are
 loaded, write `Equations.Equation` and `Equations.Inequality`.
 
+## Map of mathematics
+
+The goal is one package that solves all equations. This map lists the kinds of equations across
+mathematics and ticks the ones Equations.jl can solve today; an unticked item with a note is
+partly there. Items marked *(roadmap n)* are the next planned steps.
+
+### Representing equations
+- [x] Equations and inequalities (`=`, `≠`, `<`, `≤`, `>`, `≥`) between numbers, arrays and functions
+- [x] Systems of equations and inequalities
+- [x] Named unknowns
+- [x] Algebra on relations: arithmetic on both sides, adding relations, canonical form `g ≤ 0`, `h = 0`
+- [x] Symbolic sides (Symbolics.jl) and optimization-model sides (JuMP.jl)
+- [ ] Parameters (`f(x, p)`) and solving for a chosen unknown in terms of the others
+- [ ] Units (Unitful.jl)
+
+### Algebraic equations
+- [x] Linear systems, dense and sparse, direct and iterative (LinearSolve.jl)
+- [x] Overdetermined linear systems (least squares)
+- [ ] Underdetermined linear systems: minimum-norm solution and the full solution set (null space)
+- [x] Scalar nonlinear equations from a starting point (Newton, Roots.jl)
+- [x] Scalar nonlinear equations on a bracket, with guaranteed convergence (bisection, Brent, …)
+- [x] Nonlinear systems (Newton with line search, NonlinearSolve.jl)
+- [x] Overdetermined nonlinear systems (Gauss–Newton, nonlinear least squares)
+- [x] All complex roots of a polynomial (Polynomials.jl)
+- [x] All solutions of a polynomial system (HomotopyContinuation.jl)
+- [ ] All roots in a region, proven complete (interval methods) *(roadmap 8)*
+- [ ] All roots in an interval, including roots without a sign change (partly: `AllRoots` finds the sign changes)
+- [ ] Fixed-point equations `x = g(x)` (Anderson acceleration)
+- [ ] Equations over complex unknowns
+- [ ] Equations with matrix unknowns: Sylvester, Lyapunov, algebraic Riccati
+- [ ] Eigenvalue problems `A x = λ x`, generalized and nonlinear
+- [ ] Parametric systems and continuation, bifurcation diagrams (BifurcationKit.jl)
+
+### Symbolic and exact
+- [ ] Closed-form solutions (`x^2 ~ 2` → `±√2`) *(roadmap 5)*
+- [ ] Exact rational and integer linear algebra
+- [ ] Diophantine equations: linear, Pell, Pythagorean triples
+- [ ] Modular equations and congruences, Chinese remainder theorem
+- [ ] Equations over finite fields
+- [ ] Gröbner bases for polynomial systems
+
+### Inequalities and optimization
+- [x] Checking inequalities on a solution (`issatisfied`)
+- [ ] Feasibility: find a point satisfying a system of inequalities *(roadmap 6)*
+- [ ] Linear programming (partly: relations become JuMP constraints with `add_constraint!`)
+- [ ] Nonlinear optimization with equality and inequality constraints *(roadmap 6)*
+- [ ] Mixed-integer problems
+- [ ] Complementarity problems and variational inequalities
+- [ ] Semidefinite and conic constraints
+
+### Differential equations
+- [ ] Ordinary differential equations, initial value problems *(roadmap 7)*
+- [ ] Boundary value problems (partly: by discretizing by hand, see the sparse Poisson example)
+- [ ] Differential-algebraic equations
+- [ ] Delay differential equations
+- [ ] Stochastic differential equations
+- [ ] Partial differential equations: elliptic, parabolic, hyperbolic *(roadmap 9)*
+- [ ] Eigenvalue problems for differential operators (Sturm–Liouville, Schrödinger)
+- [ ] Fractional differential equations
+- [ ] Hamiltonian systems with symplectic integrators
+
+### Integral and functional equations
+- [ ] Fredholm and Volterra integral equations
+- [ ] Integro-differential equations
+- [ ] Difference equations and recurrences, closed forms of linear recurrences
+- [ ] Functional equations (`f(x + y) = f(x) f(y)`, …)
+
+### Calculus of variations and control
+- [ ] Euler–Lagrange equations from a functional
+- [ ] Optimal control problems
+- [ ] Hamilton–Jacobi–Bellman equations
+
+### Logic and discrete
+- [ ] Boolean equations and satisfiability (SAT)
+- [ ] Constraint satisfaction over finite domains
+- [ ] Graph equations: flows, matchings, shortest paths as optimality conditions
+
 ## Documentation
 
 The site at <https://max-models.github.io/Equations.jl/> has a guide, a gallery of
