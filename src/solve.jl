@@ -2,7 +2,7 @@
     AbstractEquationAlgorithm
 
 Supertype of the algorithms built into Equations.jl: [`NewtonMethod`](@ref),
-[`Bisection`](@ref), [`DirectLinear`](@ref) and [`AllRoots`](@ref). Algorithms from other packages (e.g.
+[`Bisection`](@ref), [`DirectLinear`](@ref), [`AllRoots`](@ref) and [`ClosedForm`](@ref). Algorithms from other packages (e.g.
 NonlinearSolve.jl) are accepted by [`solve`](@ref) through package extensions.
 """
 abstract type AbstractEquationAlgorithm end
@@ -257,6 +257,26 @@ function _bracket_roots(prob::EquationProblem, alg::AllRoots)
     end
     return Solution(roots, :Success, length(xs), float(maximum(abs ∘ g, roots; init=0.0)), alg)
 end
+
+"""
+    ClosedForm()
+
+Solve in closed form, symbolically, instead of numerically: `x^2 = 2` gives `±√2`. Provided by
+the Symbolics extension (`using Symbolics`), which uses `Symbolics.symbolic_solve`; that in turn
+needs `using Nemo` for polynomial equations and `using Groebner` for systems.
+
+The equations can have symbolic sides, with the unknowns given as Symbolics variables
+(`solve(eq, x, ClosedForm())`), or function sides, with starting values that only declare the
+unknowns as for every other algorithm (`solve(eq, (a=0, b=0), ClosedForm())`). `sol.u` is a vector
+of all the solutions found; `residual_norm` is `NaN`, since nothing is evaluated numerically.
+"""
+struct ClosedForm <: AbstractEquationAlgorithm end
+
+CommonSolve.solve(r::Union{AbstractRelation,EquationSystem}, alg::ClosedForm) = solve(EquationProblem(r, 0.0), alg)
+CommonSolve.solve(prob::EquationProblem, alg::ClosedForm) = _closed_form(prob, alg)
+
+# Extension point: the Symbolics extension solves in closed form.
+_closed_form(_, _) = throw(ArgumentError("ClosedForm needs `using Symbolics` (and `using Nemo` for polynomial equations)"))
 
 """
     jacobian(f, x::AbstractVector, ad)

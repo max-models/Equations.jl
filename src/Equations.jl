@@ -20,7 +20,7 @@ export lhs, rhs, comparison, isequality, isinequality
 export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
 export EquationProblem, Linear, unknowns, residual_function, linear_system
-export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, Solution
+export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, ClosedForm, Solution
 export TimeDerivative, ∂ₜ, Hamiltonian, InitialValueProblem, vector_field, Trajectory
 export AbstractTimeStepper, RungeKutta4, MidpointRule
 export add_constraint!

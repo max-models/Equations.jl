@@ -241,7 +241,7 @@ const API_SECTIONS = [
     "Systems" => [:EquationSystem, :equalities, :inequalities],
     "Problems" => [:EquationProblem, :unknowns, :residual_function, :Linear, :linear_system],
     "Solving" => [:solve, :default_algorithm, :Solution, :AbstractEquationAlgorithm, :NewtonMethod,
-        :Bisection, :DirectLinear, :AllRoots],
+        :Bisection, :DirectLinear, :AllRoots, :ClosedForm],
     "Evolution equations" => [:TimeDerivative, :∂ₜ, :Hamiltonian, :InitialValueProblem, :vector_field,
         :Trajectory, :AbstractTimeStepper, :RungeKutta4, :MidpointRule],
     "Integrations" => [:add_constraint!],
