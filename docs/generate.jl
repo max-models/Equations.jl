@@ -245,6 +245,7 @@ const API_SECTIONS = [
     "Evolution equations" => [:TimeDerivative, :∂ₜ, :Hamiltonian, :InitialValueProblem, :vector_field,
         :Trajectory, :AbstractTimeStepper, :RungeKutta4, :MidpointRule],
     "Integrations" => [:add_constraint!],
+    "Lean 4" => [:lean, :leanvariables, :lean_theorem, :lean_check, :lean_file],
     "Internals" => [:evaluate, :jacobian, :basefunction, :flip],
 ]
 

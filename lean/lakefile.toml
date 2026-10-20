@@ -1,0 +1,14 @@
+# A Lean 4 project for the code Equations.jl generates: `generate.jl` writes the theorems into
+# EquationsLean/Generated.lean, and `lake build` checks them against Mathlib. lake-manifest.json
+# pins the Mathlib commit and lean-toolchain its Lean version; `lake update` moves both forward
+# (then copy .lake/packages/mathlib/lean-toolchain to lean-toolchain).
+name = "EquationsLean"
+defaultTargets = ["EquationsLean"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "master"
+
+[[lean_lib]]
+name = "EquationsLean"

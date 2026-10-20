@@ -24,6 +24,7 @@ export default defineDocs({
 				{ label: 'Systems and solving', slug: 'guide/solving' },
 				{ label: 'Evolution equations', slug: 'guide/evolution' },
 				{ label: 'Integrations', slug: 'guide/integrations' },
+				{ label: 'Lean 4', slug: 'guide/lean' },
 			],
 		},
 		{ label: 'Examples', items: [{ autogenerate: { directory: 'examples' } }] },

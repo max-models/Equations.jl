@@ -9,6 +9,7 @@ using Test
     include("solve.jl")
     include("evolution.jl")
     include("show.jl")
+    include("lean.jl")
     include("doctests.jl")
     include("guide.jl")
     @testset "Extensions" begin

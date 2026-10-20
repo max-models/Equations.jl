@@ -24,6 +24,7 @@ export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisect
 export TimeDerivative, ∂ₜ, Hamiltonian, InitialValueProblem, vector_field, Trajectory
 export AbstractTimeStepper, RungeKutta4, MidpointRule
 export add_constraint!
+export lean, leanvariables, lean_theorem, lean_check, lean_file
 export AutoFiniteDiff, AutoForwardDiff
 
 include("relations.jl")
@@ -34,5 +35,6 @@ include("solve.jl")
 include("evolution.jl")
 include("show.jl")
 include("interfaces.jl")
+include("lean.jl")
 
 end

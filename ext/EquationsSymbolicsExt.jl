@@ -56,4 +56,10 @@ _shape(values, u0::NamedTuple) = NamedTuple{keys(u0)}(Tuple(values))
 _shape(values, ::Number) = only(values)
 _shape(values, ::AbstractVector) = collect(values)
 
+# Lean 4 output: symbolic expressions are written through their Julia expressions.
+Equations._lean(x::Num, context) = Equations._lean(Symbolics.toexpr(x), context)
+Equations._variables!(vars, x::Num) = Equations._variables!(vars, Symbolics.toexpr(x))
+Equations._substitute(x::Num, values) = Equations._substitute(Symbolics.toexpr(x), values)
+Equations._lean_key(k::Num) = Symbol(string(k))
+
 end
