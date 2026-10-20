@@ -83,6 +83,25 @@ Relation(x^2 ~ 2)                                  # x^2 = 2
 Relation(x ≲ 1)                                    # x ≤ 1
 ```
 
+### Closed-form solutions
+
+`ClosedForm()` solves in closed form instead of numerically, with Symbolics' `symbolic_solve`.
+It needs Nemo.jl for polynomial equations and Groebner.jl for systems; both export their own
+`solve`, so load them with `import`. The unknowns are Symbolics variables, or, for function
+sides, named by the starting values as usual. `sol.u` holds all the solutions, exactly:
+
+```julia
+using Equations, Symbolics
+import Nemo, Groebner
+@variables x y
+
+solve(Equations.Equation(x^2, 2), x, ClosedForm()).u            # [√2, -√2]
+solve(Equations.Equation(exp(x), 3), x, ClosedForm()).u         # [slog(3)], Symbolics' guarded log
+solve(EquationSystem(Equations.Equation(x + y, 3), Equations.Equation(x - y, 1)),
+      [x, y], ClosedForm()).u                                   # [Dict(x => 2, y => 1)]
+solve(Equations.Equation(u -> u.a^2 - 1, 0), (a=0.0,), ClosedForm()).u   # a = ±1, as (a = …,) tuples
+```
+
 ## JuMP.jl
 
 Relations between JuMP expressions can be added to a model as constraints, one at a time or as a
