@@ -1,6 +1,7 @@
 [deps]
 Equations = "40f55cdf-ace9-4625-a5da-d38c3b2292f1"
 ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+GeometricIntegrators = "dcce2d33-59f6-5b8d-9047-0defad88ae06"
 Groebner = "0b43b601-686d-58a3-8a1c-6623616c7cd4"
 HiGHS = "87dc4568-4c63-4d18-b0c0-bb2238e4078b"
 HomotopyContinuation = "f213a82b-91d6-5c5d-acf7-10f1c761b327"
@@ -18,6 +19,7 @@ Equations = {path = ".."}
 
 [compat]
 ForwardDiff = "0.10, 1"
+GeometricIntegrators = "0.18"
 Groebner = "0.8 - 0.10"
 HiGHS = "1"
 HomotopyContinuation = "2"

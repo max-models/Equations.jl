@@ -7,11 +7,13 @@ using Test
     include("system.jl")
     include("problem.jl")
     include("solve.jl")
+    include("evolution.jl")
     include("show.jl")
     include("doctests.jl")
     include("guide.jl")
     @testset "Extensions" begin
         include("ext/forwarddiff.jl")
+        include("ext/geometricintegrators.jl")
         include("ext/jump.jl")
         include("ext/symbolics.jl")
         include("ext/nonlinearsolve.jl")

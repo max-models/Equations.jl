@@ -5,7 +5,8 @@ One package for working with equations — and, more generally, relations such a
 inequalities — independent of what the two sides are made of: numbers, arrays,
 plain Julia functions, symbolic expressions or optimization-model expressions.
 
-See [`Relation`](@ref), [`EquationSystem`](@ref), [`EquationProblem`](@ref) and [`solve`](@ref).
+See [`Relation`](@ref), [`EquationSystem`](@ref), [`EquationProblem`](@ref),
+[`InitialValueProblem`](@ref) and [`solve`](@ref).
 """
 module Equations
 
@@ -20,6 +21,8 @@ export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
 export EquationProblem, Linear, unknowns, residual_function, linear_system
 export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, ClosedForm, Solution
+export TimeDerivative, ∂ₜ, Hamiltonian, InitialValueProblem, vector_field, Trajectory
+export AbstractTimeStepper, RungeKutta4, MidpointRule
 export add_constraint!
 export AutoFiniteDiff, AutoForwardDiff
 
@@ -28,6 +31,7 @@ include("operations.jl")
 include("system.jl")
 include("problem.jl")
 include("solve.jl")
+include("evolution.jl")
 include("show.jl")
 include("interfaces.jl")
 
