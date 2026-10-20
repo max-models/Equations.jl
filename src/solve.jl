@@ -2,7 +2,7 @@
     AbstractEquationAlgorithm
 
 Supertype of the algorithms built into Equations.jl: [`NewtonMethod`](@ref),
-[`Bisection`](@ref) and [`DirectLinear`](@ref). Algorithms from other packages (e.g.
+[`Bisection`](@ref), [`DirectLinear`](@ref) and [`AllRoots`](@ref). Algorithms from other packages (e.g.
 NonlinearSolve.jl) are accepted by [`solve`](@ref) through package extensions.
 """
 abstract type AbstractEquationAlgorithm end
@@ -43,7 +43,10 @@ end
 
 Solve a linear system `A * x = b` in one step, with `\\` (least squares for non-square `A`).
 The default algorithm of [`solve`](@ref) when every side of the equations is a constant or a
-[`Linear`](@ref) map. Passed explicitly, it assumes the residual is affine in the unknowns.
+[`Linear`](@ref) map; `A` and `b` then come from [`linear_system`](@ref), so sparse matrices
+stay sparse. Passed explicitly for other equations, it assumes the residual is affine in the
+unknowns and builds a dense `A` from it. For iterative and specialised solvers, pass a
+LinearSolve.jl algorithm instead (with `using LinearSolve`).
 """
 struct DirectLinear <: AbstractEquationAlgorithm end
 
@@ -170,8 +173,13 @@ end
 function CommonSolve.solve(prob::EquationProblem, alg::DirectLinear)
     prob.u0 isa Bracket && throw(ArgumentError("DirectLinear needs a starting point, not a bracket"))
     f = residual_function(prob)
-    u0 = _vector(prob.u0)
-    # f(u) = A u - b: f(0) gives -b and f(eⱼ) - f(0) the columns of A, exactly for affine f
+    A, b = _islinear(prob) ? linear_system(prob) : _probe_linear(f, _vector(prob.u0))
+    u = A \ b
+    return Solution(_rebuild(u, prob.u0), :Success, 1, float(norm(f(u))), alg)
+end
+
+# A u = b for an affine residual f(u) = A u - b: f(0) gives -b and f(eⱼ) - f(0) the columns of A.
+function _probe_linear(f, u0)
     f0 = f(zero(u0))
     A = similar(f0, float(eltype(f0)), length(f0), length(u0))
     for j in eachindex(u0)
@@ -179,8 +187,75 @@ function CommonSolve.solve(prob::EquationProblem, alg::DirectLinear)
         e[j] = 1
         A[:, j] = f(e) - f0
     end
-    u = A \ -f0
-    return Solution(_rebuild(u, prob.u0), :Success, 1, float(norm(f(u))), alg)
+    return A, -f0
+end
+
+"""
+    AllRoots(; samples=1000, real=false)
+
+Find all solutions instead of one. What "all" means depends on the problem:
+
+- a scalar equation with a bracket `(a, b)`: every root in `[a, b]` where the equation changes
+  sign, by sampling it at `samples` points and bisecting each sign change (roots of even
+  multiplicity, and roots closer together than the sampling, can be missed);
+- an equation between Polynomials.jl polynomials (and numbers): all complex roots, from the
+  Polynomials extension;
+- a system of polynomial equations, written as ordinary Julia functions: all isolated complex
+  solutions, by homotopy continuation, from the HomotopyContinuation extension.
+
+`real=true` keeps the real solutions only. The solution `u` is a vector of solutions, each in the
+shape of the starting values. For a polynomial the starting values can be left out
+(`solve(eq, AllRoots())`); for a system they only declare the unknowns.
+
+# Examples
+```jldoctest
+julia> solve(Equation(x -> sin(x), 0), (-1, 7), AllRoots()).u ≈ [0, π, 2π]
+true
+```
+"""
+Base.@kwdef struct AllRoots <: AbstractEquationAlgorithm
+    samples::Int = 1000
+    real::Bool = false
+end
+
+# The roots of a polynomial need no starting values.
+CommonSolve.solve(r::Union{AbstractRelation,EquationSystem}, alg::AllRoots) = solve(EquationProblem(r, 0.0), alg)
+
+function CommonSolve.solve(prob::EquationProblem, alg::AllRoots)
+    if length(prob.system) == 1
+        roots = _polynomial_roots(only(prob.system))
+        if roots !== nothing
+            alg.real && (roots = [real(z) for z in roots if abs(imag(z)) <= 1e-10 * max(1, abs(z))])
+            residuals = [only(residual_function(prob)([z])) for z in roots]
+            return Solution(roots, :Success, 1, float(maximum(abs, residuals; init=0.0)), alg)
+        end
+    end
+    prob.u0 isa Bracket && return _bracket_roots(prob, alg)
+    return _homotopy_roots(prob, alg)
+end
+
+# Extension points: all roots of a polynomial equation (Polynomials) and of a polynomial
+# system (HomotopyContinuation).
+_polynomial_roots(_) = nothing
+_homotopy_roots(_, _) = throw(ArgumentError(
+    "AllRoots needs a bracket (a, b) for a scalar equation, polynomials from Polynomials.jl, " *
+    "or `using HomotopyContinuation` for polynomial systems"))
+
+function _bracket_roots(prob::EquationProblem, alg::AllRoots)
+    length(prob.system) == 1 || throw(ArgumentError("AllRoots on a bracket solves a single scalar equation"))
+    f = residual_function(prob)
+    g(x) = only(f([x]))
+    a, b = float.(prob.u0)
+    xs = range(a, b; length=alg.samples + 1)
+    gs = g.(xs)
+    roots = Float64[]
+    for i in eachindex(xs)
+        iszero(gs[i]) && (push!(roots, xs[i]); continue)
+        i < lastindex(xs) && !iszero(gs[i+1]) && sign(gs[i]) != sign(gs[i+1]) || continue
+        sol = solve(EquationProblem(prob.system, (xs[i], xs[i+1])), Bisection())
+        push!(roots, sol.u)
+    end
+    return Solution(roots, :Success, length(xs), float(maximum(abs ∘ g, roots; init=0.0)), alg)
 end
 
 """

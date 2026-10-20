@@ -18,8 +18,8 @@ export Comparison, EqualTo, NotEqualTo, LessThan, LessEqual, GreaterThan, Greate
 export lhs, rhs, comparison, isequality, isinequality
 export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
-export EquationProblem, Linear, unknowns, residual_function
-export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, Solution
+export EquationProblem, Linear, unknowns, residual_function, linear_system
+export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, Solution
 export add_constraint!
 export AutoFiniteDiff, AutoForwardDiff
 

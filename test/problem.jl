@@ -64,6 +64,34 @@
         @test solve(Equation(Linear(A), b), zeros(2), NewtonMethod()).u ≈ A \ b
     end
 
+    @testset "linear_system" begin
+        A = [2.0 1.0; 1.0 3.0]
+        M, b = linear_system(EquationProblem(Equation(Linear(A), [3.0, 5.0]), zeros(2)))
+        @test M == A && b == [3.0, 5.0]
+        # both sides, constants on the left, and several equations stacked
+        sys = EquationSystem(Equation(Linear([1.0 0.0]), Linear([0.0 1.0])), Equation(1.0, Linear([1.0 1.0])))
+        M, b = linear_system(EquationProblem(sys, zeros(2)))
+        @test M == [1.0 -1.0; -1.0 -1.0] && b == [0.0, -1.0]
+        @test solve(sys, zeros(2)).u ≈ [0.5, 0.5]
+        # a scalar right-hand side is applied to every row
+        @test linear_system(EquationProblem(Equation(Linear([1.0 0.0; 0.0 1.0]), 2.0), zeros(2)))[2] == [2.0, 2.0]
+        @test_throws ArgumentError linear_system(EquationProblem(Equation(x -> x, 1.0), 0.0))
+        @test_throws DimensionMismatch linear_system(EquationProblem(Equation(Linear(A), [1.0, 2.0]), zeros(3)))
+        @test_throws DimensionMismatch linear_system(EquationProblem(Equation(Linear(A), [1.0, 2.0, 3.0]), zeros(2)))
+    end
+
+    @testset "AllRoots on a bracket" begin
+        sol = solve(Equation(sin, 0), (-1, 7), AllRoots())
+        @test sol.u ≈ [0, π, 2π] atol = 1e-12
+        @test sol.alg isa AllRoots
+        @test solve(Equation(x -> (x - 1) * (x - 2) * (x - 3), 0), (0, 4), AllRoots()).u ≈ [1, 2, 3]
+        @test isempty(solve(Equation(x -> x^2, -1), (-2, 2), AllRoots()).u)
+        # a root exactly on a sample point
+        @test solve(Equation(x -> x, 0), (-1, 1), AllRoots(samples=2)).u == [0.0]
+        @test_throws ArgumentError solve(Equation(x -> x^2, 2), 1.0, AllRoots())
+        @test_throws ArgumentError solve(EquationSystem(Equation(x -> x, 0), Equation(x -> x, 0)), (-1, 1), AllRoots())
+    end
+
     @testset "Singular Jacobian" begin
         sol = solve(Equation(x -> x^2, -1), 0.0)
         @test sol.retcode === :Failure

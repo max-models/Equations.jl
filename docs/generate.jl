@@ -239,9 +239,9 @@ const API_SECTIONS = [
         :lhs, :rhs, :comparison, :isequality, :isinequality],
     "Checking and manipulating" => [:residual, :issatisfied, :canonicalize, :reverse, :+, :*],
     "Systems" => [:EquationSystem, :equalities, :inequalities],
-    "Problems" => [:EquationProblem, :unknowns, :residual_function, :Linear],
+    "Problems" => [:EquationProblem, :unknowns, :residual_function, :Linear, :linear_system],
     "Solving" => [:solve, :default_algorithm, :Solution, :AbstractEquationAlgorithm, :NewtonMethod,
-        :Bisection, :DirectLinear],
+        :Bisection, :DirectLinear, :AllRoots],
     "Integrations" => [:add_constraint!],
     "Internals" => [:evaluate, :jacobian, :basefunction, :flip],
 ]

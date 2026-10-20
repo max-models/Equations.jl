@@ -99,3 +99,34 @@ _islinear_side(side) = !(side isa Function) || side isa Linear
 _islinear(prob::EquationProblem) =
     all(r -> r isa Relation && _islinear_side(r.lhs) && _islinear_side(r.rhs), prob.system) &&
     any(r -> r.lhs isa Linear || r.rhs isa Linear, prob.system)
+
+"""
+    linear_system(prob::EquationProblem) -> (A, b)
+
+The matrix and right-hand side of a linear problem, one whose sides are all constants or
+[`Linear`](@ref) maps, such that its equations read `A * u = b`. Built from the maps themselves,
+so a sparse `A` stays sparse.
+"""
+function linear_system(prob::EquationProblem)
+    _islinear(prob) || throw(ArgumentError("the problem is not linear: every side must be a constant or a Linear map"))
+    n = length(_vector(prob.u0))
+    blocks = [_linear_rows(r, n) for r in prob.system]
+    return reduce(vcat, first.(blocks)), reduce(vcat, last.(blocks))
+end
+
+_coefficients(L::Linear) = L.A
+_coefficients(_) = nothing
+_constant(::Linear) = false
+_constant(c) = c
+
+function _linear_rows(r::Relation, n)
+    l, rh = _coefficients(r.lhs), _coefficients(r.rhs)
+    A = l === nothing ? (rh === nothing ? nothing : -rh) : (rh === nothing ? l : l - rh)
+    c = _constant(r.rhs) .- _constant(r.lhs)
+    m = A === nothing ? length(c) : size(A, 1)
+    A === nothing && (A = zeros(m, n))
+    size(A, 2) == n || throw(DimensionMismatch("Linear map with $(size(A, 2)) columns for $n unknowns"))
+    b = c isa AbstractArray ? vec(c) : fill(c, m)
+    length(b) == m || throw(DimensionMismatch("$m equations but a right-hand side of length $(length(b))"))
+    return A, b
+end

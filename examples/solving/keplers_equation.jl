@@ -41,6 +41,15 @@ tr = solve(eq, M, TrustRegion())
 
 fd.u ≈ ad.u ≈ tr.u, issatisfied(eq, ad.u; atol=1e-10)
 
+# Or with Roots.jl: its bracketing methods converge from a bracket like bisection does, but in far
+# fewer steps. $E$ lies in $[0, 2\pi]$:
+
+using Roots
+
+br = solve(eq, (0, 2π), Roots.Brent())
+bi = solve(eq, (0, 2π))
+br.u ≈ bi.u, br.iterations, bi.iterations
+
 # ## A whole orbit
 #
 # Solving for many mean anomalies traces the orbit; the position in the orbital plane follows from

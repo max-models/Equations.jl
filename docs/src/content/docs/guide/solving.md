@@ -94,6 +94,24 @@ Solution (DirectLinear, retcode: Success, iterations: 1, residual norm: 0.0)
 u: [0.8, 1.4]
 ```
 
+## All the roots
+
+`AllRoots()` asks for every solution instead of one; `sol.u` is then a vector of solutions. On a
+bracket it samples the equation and bisects every sign change:
+
+```julia
+julia> solve(Equation(sin, 0), (-1, 7), AllRoots()).u
+3-element Vector{Float64}:
+ 0.0
+ 3.141592653589793
+ 6.283185307179586
+```
+
+Roots where the function touches zero without changing sign, and roots closer together than the
+sampling (`samples=1000` points by default), can be missed. With Polynomials.jl it finds all
+complex roots of a polynomial, and with HomotopyContinuation.jl all solutions of a polynomial
+system; see [Integrations](/Equations.jl/guide/integrations/#all-roots-polynomials-and-homotopycontinuationjl).
+
 ## Problems and algorithms
 
 `solve(relations, u0)` is short for `solve(EquationProblem(relations, u0))`. The problem knows its
@@ -114,8 +132,9 @@ julia> solve(prob, NewtonMethod(abstol=1e-14)).retcode
 :Success
 ```
 
-`residual_function(prob)` gives the residual as a function of a flat vector of unknowns, for use
-with other solvers.
+`residual_function(prob)` gives the residual as a function of a flat vector of unknowns, and
+`linear_system(prob)` the matrix and right-hand side of a linear problem, for use with other
+solvers.
 
 ## Newton's method
 
