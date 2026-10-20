@@ -1,7 +1,8 @@
 name: Lean
 
 # Check the Lean 4 code that Equations.jl generates against Mathlib: lean/generate.jl writes the
-# theorems, and `lake build` type-checks them and runs the proofs that are not `sorry`.
+# theorems, and `lake build` type-checks them and runs the proofs that are not `sorry`. The Mathlib
+# version is pinned by lean/lake-manifest.json and lean/lean-toolchain.
 
 on:
   push:
@@ -28,10 +29,6 @@ jobs:
         run: |
           julia --project=. -e 'using Pkg; Pkg.instantiate()'
           julia --project=. lean/generate.jl
-
-      # lean/lakefile.toml follows Mathlib's master branch, so use the Lean version it needs
-      - name: Use Mathlib's Lean version
-        run: curl -sSfL https://raw.githubusercontent.com/leanprover-community/mathlib4/master/lean-toolchain -o lean/lean-toolchain
 
       - uses: leanprover/lean-action@v1
         with:
