@@ -1,0 +1,81 @@
+name: Docs
+
+# The Starlight site in docs/ (max-models starlight-theme): run the examples and write the API
+# page (docs/generate.jl), build, smoke test, and deploy to GitHub Pages on a push to main.
+# GitHub Pages must deploy from GitHub Actions (Settings -> Pages -> Source).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: '1'
+      - uses: julia-actions/cache@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+
+      - name: Install the Julia packages
+        run: julia --project=. -e 'using Pkg; Pkg.instantiate()'
+
+      - name: Install the npm packages
+        run: npm ci
+
+      - name: Run the examples and write the API page
+        run: julia --project=. generate.jl
+
+      - name: Build the site
+        run: |
+          npx starlight-check-mdx
+          npx astro build
+
+      - name: Smoke test the built site
+        env:
+          BASE: /${{ github.event.repository.name }}/
+        run: |
+          missing=0
+          for path in index.html examples/index.html examples/keplers-equation/index.html api/index.html guide/relations/index.html; do
+            test -f "dist/$path" || { echo "missing dist/$path"; missing=1; }
+          done
+          grep -q "href=\"$BASE" dist/index.html || { echo "links do not use the base path $BASE"; missing=1; }
+          exit $missing
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          path: docs/dist
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

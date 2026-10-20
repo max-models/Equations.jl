@@ -1,0 +1,49 @@
+---
+title: Equations.jl
+description: One package for equations and inequalities in Julia, and one solve for all of them.
+template: splash
+hero:
+  tagline: There are too many XYZEquations.jl packages out there, it would obviously be better to have one package that solves all equations.
+  actions:
+    - text: Get started
+      link: /Equations.jl/getting-started/installation/
+      icon: right-arrow
+    - text: Examples
+      link: /Equations.jl/examples/
+      icon: open-book
+      variant: secondary
+    - text: View on GitHub
+      link: https://github.com/max-models/Equations.jl
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+```julia
+using Equations
+
+disk = Relation(<=, x -> x[1]^2 + x[2]^2, 1)    # f(x) ≤ 1
+issatisfied(disk, [0.5, 0.5])                    # true
+
+sys = EquationSystem(Equation(x -> x[1]^2 + x[2]^2, 1), Equation(x -> x[1], x -> x[2]))
+solve(sys, [1.0, 0.5]).u                         # ≈ [0.70711, 0.70711]
+```
+
+## What it does
+
+<CardGrid>
+  <Card title="One vocabulary" icon="puzzle">`=`, `≠`, `<`, `≤`, `>` and `≥` between numbers, arrays, functions, symbolic or JuMP expressions.</Card>
+  <Card title="Algebra" icon="random">Arithmetic on both sides at once, flipping inequalities where needed; `canonicalize` for optimizers.</Card>
+  <Card title="One solve" icon="rocket">A built-in Newton method, or any NonlinearSolve.jl algorithm, behind `CommonSolve.solve`.</Card>
+  <Card title="Integrations" icon="seti:julia">Package extensions for ForwardDiff.jl, NonlinearSolve.jl, Symbolics.jl and JuMP.jl.</Card>
+</CardGrid>
+
+## Start here
+
+<CardGrid>
+  <LinkCard title="Installation" href="/Equations.jl/getting-started/installation/" description="Add the package." />
+  <LinkCard title="Guide" href="/Equations.jl/guide/relations/" description="Relations, systems and solving, step by step." />
+  <LinkCard title="Examples" href="/Equations.jl/examples/" description="Scripts run when the site was built, with their output." />
+  <LinkCard title="API reference" href="/Equations.jl/api/" description="Generated from the docstrings." />
+</CardGrid>
