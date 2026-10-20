@@ -18,7 +18,15 @@ using Test
         include("ext/linearsolve.jl")
         include("ext/roots.jl")
         include("ext/polynomials.jl")
-        include("ext/homotopycontinuation.jl")
+        # HomotopyContinuation runs in its own Julia process. On Julia 1.10, compiling its solver
+        # after the other test packages (GeometricIntegrators, Nemo, ...) are loaded crashes LLVM
+        # ("Do not know how to split the result of this operator"), which a session with only
+        # Equations and HomotopyContinuation, as a user has it, never runs into.
+        @testset "HomotopyContinuation (separate process)" begin
+            script = joinpath(@__DIR__, "ext", "homotopycontinuation.jl")
+            cmd = `$(Base.julia_cmd()) --startup-file=no --project=$(Base.active_project()) $script`
+            @test success(pipeline(cmd; stdout, stderr))
+        end
     end
     include("quality.jl")
 end
