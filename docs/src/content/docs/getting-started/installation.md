@@ -27,7 +27,7 @@ are package extensions: they load automatically when the corresponding package i
 | [Roots.jl](https://github.com/JuliaMath/Roots.jl) | `solve(eq, (a, b), Roots.Brent())`, or any other Roots method for scalar equations |
 | [Polynomials.jl](https://github.com/JuliaMath/Polynomials.jl) | Polynomial sides, and `AllRoots()` for all their complex roots |
 | [HomotopyContinuation.jl](https://www.juliahomotopycontinuation.org) | `AllRoots()` for all solutions of polynomial systems |
-| [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl) | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution |
+| [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl) | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution, `ClosedForm()` for exact solutions |
 | [JuMP.jl](https://github.com/jump-dev/JuMP.jl) | `add_constraint!(model, relation_or_system)` |
 
 Next: the [guide](/Equations.jl/guide/relations/) or the [examples](/Equations.jl/examples/).
