@@ -123,16 +123,56 @@ partly there. Items marked *(roadmap n)* are the next planned steps.
 - [ ] Partial differential equations: elliptic, parabolic, hyperbolic *(roadmap 9)*
 - [ ] Eigenvalue problems for differential operators (Sturm–Liouville, Schrödinger)
 - [ ] Fractional differential equations
-- [ ] Hamiltonian systems with symplectic integrators
+- [ ] Hamiltonian, Lagrangian and other structure-preserving integration: see *Geometric numerical integration* below
+
+### Geometric numerical integration
+Structure-preserving integrators keep the geometry of a problem (symplecticity, energy, momenta,
+constraints) over long times. The [JuliaGNI](https://github.com/JuliaGNI) packages by Michael Kraus
+cover this field; the equation types are those of GeometricEquations.jl, solved with
+GeometricIntegrators.jl.
+- [ ] Ordinary and implicit ODEs (`ODE`, `IODE`) with GeometricIntegrators.jl and the Runge–Kutta tableaus of RungeKutta.jl
+- [ ] Partitioned and Hamiltonian ODEs (`PODE`, `HODE`): symplectic and partitioned Runge–Kutta, Gauss–Legendre
+- [ ] Lagrangian ODEs (`LODE`) and variational integrators (VPRK, degenerate variational integrators)
+- [ ] Euler–Lagrange and Hamilton's equations generated from a Lagrangian or Hamiltonian (EulerLagrange.jl)
+- [ ] Discrete Euler–Lagrange equations (`DELE`)
+- [ ] Split ODEs (`SODE`): splitting and composition methods (Lie–Trotter, Strang, higher order)
+- [ ] Constrained systems (`DAE`, `PDAE`, `HDAE`, `IDAE`, `LDAE`): SPARK methods and projections onto the constraints
+- [ ] Stochastic systems (`SDE`, `PSDE`, `SPSDE`): stochastic symplectic and variational integrators (StochasticIntegrators.jl)
+- [ ] Integrators with nonlinear, e.g. neural-network, bases in time (NonlinearIntegrators.jl)
+- [ ] Invariants: energy, momenta and Casimirs, and their long-time behaviour
+- [ ] Poincaré integral invariants (PoincareInvariants.jl)
+- [ ] Hamiltonian PDEs through discretised Poisson brackets (GeometricBrackets.jl)
+- [ ] Ensembles of initial conditions and parameters
+- [ ] The test problems of GeometricProblems.jl (harmonic oscillator, pendulum, Kepler, Lotka–Volterra, …) as examples
+- [ ] Structure-preserving learned models: symplectic networks, symplectic autoencoders (GeometricMachineLearning.jl)
+- [ ] SimpleSolvers.jl as a nonlinear-solver backend for `solve`
+
+### Differential geometry
+- [ ] Equations whose unknowns live on manifolds: spheres, rotation groups, Stiefel and Grassmann manifolds (Manifolds.jl)
+- [ ] Optimization on manifolds (Manopt.jl; GeometricOptimizers.jl for Stiefel and Grassmann)
+- [ ] ODEs on Lie groups and homogeneous spaces: Lie group integrators, Runge–Kutta–Munthe-Kaas, Crouch–Grossman (LieGroups.jl)
+- [ ] Geodesic equations: initial value (exponential map) and boundary value (logarithm map) problems
+- [ ] Connections, parallel transport and curvature: Christoffel symbols and the Riemann tensor from a metric
+- [ ] Hamiltonian mechanics on symplectic and Poisson manifolds: Poisson brackets, Casimirs, momentum maps
+- [ ] Differential forms and exterior calculus; discrete exterior calculus for PDEs on meshes (CombinatorialSpaces.jl, Decapodes.jl)
+- [ ] Geometric algebra (Grassmann.jl)
+- [ ] Geometric PDEs: harmonic maps, minimal surfaces, mean curvature and Ricci flow, Einstein's field equations
+
+### Plasma physics
+The [JuliaPlasma](https://github.com/JuliaPlasma) packages build on the geometric integrators.
+- [ ] Charged-particle and guiding-centre dynamics in electromagnetic fields (ChargedParticleDynamics.jl, ElectromagneticFields.jl)
+- [ ] The Vlasov equation: particle, grid-based and reduced-basis methods (VlasovMethods.jl, ParticleMethods.jl)
+- [ ] Particle-in-cell simulation (ParticleInCell.jl)
+- [ ] The Poisson equation, spectral and B-spline Galerkin (PoissonSolvers.jl, SimpleSplines.jl)
 
 ### Integral and functional equations
-- [ ] Fredholm and Volterra integral equations
+- [ ] Fredholm and Volterra integral equations (quadrature from QuadratureRules.jl)
 - [ ] Integro-differential equations
 - [ ] Difference equations and recurrences, closed forms of linear recurrences
 - [ ] Functional equations (`f(x + y) = f(x) f(y)`, …)
 
 ### Calculus of variations and control
-- [ ] Euler–Lagrange equations from a functional
+- [ ] Euler–Lagrange equations from a functional (for mechanics: EulerLagrange.jl, below)
 - [ ] Optimal control problems
 - [ ] Hamilton–Jacobi–Bellman equations
 
