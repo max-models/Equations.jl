@@ -242,6 +242,8 @@ const API_SECTIONS = [
     "Problems" => [:EquationProblem, :unknowns, :residual_function, :Linear, :linear_system],
     "Solving" => [:solve, :default_algorithm, :Solution, :AbstractEquationAlgorithm, :NewtonMethod,
         :Bisection, :DirectLinear, :AllRoots, :ClosedForm],
+    "Inequalities and optimization" => [:Feasibility, :minimize, :maximize, :Optimum, :AugmentedLagrangian,
+        :JuMPSolver],
     "Evolution equations" => [:TimeDerivative, :∂ₜ, :Hamiltonian, :InitialValueProblem, :vector_field,
         :Trajectory, :AbstractTimeStepper, :RungeKutta4, :MidpointRule],
     "Integrations" => [:add_constraint!],

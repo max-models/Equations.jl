@@ -19,4 +19,6 @@
     @test sprint(show, Equation(Linear([1 0; 0 1]), [1, 2])) == "A*x = [1, 2]"
     @test sprint(show, MIME"text/plain"(), EquationProblem(Equation(u -> u.x, 1), (x=0.0,))) ==
           "EquationProblem with unknowns (:x,) and starting values (x = 0.0,)\nEquationSystem with 1 relation:\n  f(x) = 1"
+    opt = Optimum(2.0, 4.0, :Success, 3, 0.0, AugmentedLagrangian())
+    @test sprint(show, MIME"text/plain"(), opt) == "Optimum (AugmentedLagrangian, retcode: Success, iterations: 3, violation: 0.0)\nu: 2.0\nobjective: 4.0"
 end

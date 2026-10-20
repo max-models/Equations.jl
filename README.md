@@ -44,6 +44,11 @@ solve(rect, (w=5.0, h=1.0)).u                      # named unknowns: ≈ (w = 4.
 solve(Equation(Linear([2.0 1.0; 1.0 3.0]), [3.0, 5.0]), zeros(2)).u   # linear → DirectLinear: [0.8, 1.4]
 solve(Equation(sin, 0), (-1, 7), AllRoots()).u     # every root in the bracket: [0, π, 2π]
 
+# Inequalities and optimization
+solve(EquationSystem(disk, Relation(>=, x -> x[1], 0.5)), [-2.0, 2.0]).u   # a feasible point
+minimize(u -> (u.x - 1)^2 + (u.y - 2)^2, (x=0.0, y=0.0);
+         subject_to=Relation(<=, u -> u.x + u.y, 1)).u                  # ≈ (x = 0.0, y = 1.0)
+
 # Evolution equations and Hamiltonian systems
 solve(Equation(∂ₜ, (t, u) -> -u), 1.0, (0.0, 1.0); dt=0.1).u[end]          # ≈ exp(-1)
 oscillator = Equation(∂ₜ, Hamiltonian((t, q, p) -> p^2 / 2 + q^2 / 2))
@@ -64,7 +69,7 @@ Package extensions load automatically together with the corresponding package:
 | HomotopyContinuation.jl | `AllRoots()` for all solutions of polynomial systems                      |
 | GeometricIntegrators.jl | `solve(ivp, Gauss(2))`, `SymplecticEulerA()`, …: geometric integrators for evolution equations and Hamiltonian systems |
 | Symbolics.jl     | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution, and `ClosedForm()` for exact solutions |
-| JuMP.jl          | `add_constraint!(model, relation_or_system)`                                     |
+| JuMP.jl          | `add_constraint!(model, relation_or_system)`; `JuMPSolver(optimizer)` for `minimize` and feasibility |
 
 `solve` is `CommonSolve.solve`, so it does not clash with the SciML ecosystem.
 Symbolics.jl also exports `Equation` and `Inequality`; when both packages are
@@ -116,9 +121,10 @@ partly there. Items marked *(roadmap n)* are the next planned steps.
 
 ### Inequalities and optimization
 - [x] Checking inequalities on a solution (`issatisfied`)
-- [ ] Feasibility: find a point satisfying a system of inequalities *(roadmap 6)*
-- [ ] Linear programming (partly: relations become JuMP constraints with `add_constraint!`)
-- [ ] Nonlinear optimization with equality and inequality constraints *(roadmap 6)*
+- [x] Feasibility: find a point satisfying a system of equations and inequalities (`Feasibility`, the default of `solve` for such systems)
+- [x] Linear programming (`JuMPSolver(HiGHS.Optimizer)`, or relations as JuMP constraints with `add_constraint!`)
+- [x] Nonlinear optimization with equality and inequality constraints (`minimize`, `maximize`: augmented Lagrangian, or `JuMPSolver(Ipopt.Optimizer)`)
+- [ ] Global optimization, and certificates of infeasibility for nonlinear systems
 - [ ] Mixed-integer problems
 - [ ] Complementarity problems and variational inequalities
 - [ ] Semidefinite and conic constraints

@@ -12,7 +12,7 @@ module Equations
 
 using ADTypes: ADTypes, AutoFiniteDiff, AutoForwardDiff
 using CommonSolve: CommonSolve, solve
-using LinearAlgebra: SingularException, norm
+using LinearAlgebra: Diagonal, I, SingularException, diag, dot, norm
 
 export AbstractRelation, Relation, Equation, Inequality, @relation
 export Comparison, EqualTo, NotEqualTo, LessThan, LessEqual, GreaterThan, GreaterEqual
@@ -21,6 +21,7 @@ export residual, issatisfied, canonicalize
 export EquationSystem, equalities, inequalities
 export EquationProblem, Linear, unknowns, residual_function, linear_system
 export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, ClosedForm, Solution
+export Feasibility, minimize, maximize, Optimum, AugmentedLagrangian, JuMPSolver
 export TimeDerivative, ∂ₜ, Hamiltonian, InitialValueProblem, vector_field, Trajectory
 export AbstractTimeStepper, RungeKutta4, MidpointRule
 export add_constraint!
@@ -32,6 +33,7 @@ include("operations.jl")
 include("system.jl")
 include("problem.jl")
 include("solve.jl")
+include("optimization.jl")
 include("evolution.jl")
 include("show.jl")
 include("interfaces.jl")

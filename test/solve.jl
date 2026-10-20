@@ -22,7 +22,9 @@
     @test sol.retcode === :MaxIters
     @test sol.iterations == 5
 
-    @test_throws ArgumentError solve(Relation(<=, x -> x, 1), 0.0)
+    # inequalities are solved for a feasible point; algorithms for equations reject them
+    @test solve(Relation(<=, x -> x, 1), 5.0).u <= 1
+    @test_throws ArgumentError solve(Relation(<=, x -> x, 1), 0.0, NewtonMethod())
 
     J = Equations.jacobian(x -> [x[1]^2, x[1] * x[2]], [2.0, 3.0], AutoFiniteDiff())
     @test J ≈ [4 0; 3 2] atol = 1e-6

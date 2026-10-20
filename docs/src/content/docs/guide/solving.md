@@ -58,6 +58,10 @@ julia> solve(sys[1:2], [1.0, 0.5]).u
 `:MaxIters`, or `:Failure` when a step could not be computed), `iterations`, `residual_norm` and
 `alg`, the algorithm that was used.
 
+A system with inequalities is solved by finding a point that satisfies all of its relations, with
+the `Feasibility` algorithm; see [Inequalities and optimization](/Equations.jl/guide/optimization/),
+which also covers `minimize` and `maximize`.
+
 ## Named unknowns
 
 With a `NamedTuple` of starting values the function sides receive the unknowns by name, and the

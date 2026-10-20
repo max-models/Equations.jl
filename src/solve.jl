@@ -72,11 +72,12 @@ end
 
 Solve the equations of `prob` (or of `relations`, a [`Relation`](@ref) or an
 [`EquationSystem`](@ref), with starting values `u0`; see [`EquationProblem`](@ref) for their
-forms). Returns a [`Solution`](@ref).
+forms). Returns a [`Solution`](@ref). A system with inequalities is solved by finding a point
+that satisfies all of its relations.
 
 Without `alg`, the algorithm is chosen from the problem ([`default_algorithm`](@ref)):
-[`Bisection`](@ref) for a bracket, [`DirectLinear`](@ref) for linear equations and
-[`NewtonMethod`](@ref) otherwise. `alg` can also be a NonlinearSolve.jl algorithm such as
+[`Bisection`](@ref) for a bracket, [`Feasibility`](@ref) for a system with inequalities,
+[`DirectLinear`](@ref) for linear equations and [`NewtonMethod`](@ref) otherwise. `alg` can also be a NonlinearSolve.jl algorithm such as
 `TrustRegion()` once NonlinearSolve is loaded.
 
 # Examples
@@ -104,6 +105,7 @@ The algorithm [`solve`](@ref) uses for `prob` when none is given.
 """
 function default_algorithm(prob::EquationProblem)
     prob.u0 isa Bracket && return Bisection()
+    any(isinequality, prob.system) && return Feasibility()
     prob.u0 isa Union{Number,AbstractVector} && _islinear(prob) && return DirectLinear()
     return NewtonMethod()
 end

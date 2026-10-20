@@ -27,11 +27,21 @@ left = solve(sys, [-1.0, 0.0])
 
 right.u ≈ [2, 1] / sqrt(5), left.u ≈ -[2, 1] / sqrt(5)
 
-# Inequalities can sit in the same system, as conditions on the solution. `solve` uses only
-# equations, so solve the equations and check the whole system afterwards:
+# Inequalities can sit in the same system, as conditions on the solution: they hold for one of
+# the two intersections only.
 
 conditions = EquationSystem(sys..., Relation(>=, p -> p[1], 0))
 issatisfied(conditions, right.u; atol=1e-10), issatisfied(conditions, left.u; atol=1e-10)
+
+# `solve` on the whole system looks for a point that satisfies all three relations, with the
+# `Feasibility` algorithm:
+
+solve(conditions, [0.0, 1.0])
+
+# It is a local method. From the start that led to the left intersection before, it stops where
+# the violation of the relations cannot be reduced any further, and says so:
+
+solve(conditions, [-1.0, 0.0])
 
 # ## Overdetermined systems
 #

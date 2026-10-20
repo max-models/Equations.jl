@@ -89,7 +89,7 @@ _rebuild(u, u0::NamedTuple) = NamedTuple{keys(u0)}(Tuple(u))
 function residual_function(prob::EquationProblem)
     sys = prob.system
     all(isequality, sys) || throw(ArgumentError(
-        "solve supports equations only; the system has inequalities (check them on the solution with issatisfied)"))
+        "the system has inequalities, which this algorithm does not handle; use Feasibility (the default for such systems) or a JuMPSolver"))
     u0 = prob.u0
     return u -> residual(sys, _rebuild(u, u0))
 end
