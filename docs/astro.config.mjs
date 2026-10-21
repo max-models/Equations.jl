@@ -22,6 +22,7 @@ export default defineDocs({
 			items: [
 				{ label: 'Relations', slug: 'guide/relations' },
 				{ label: 'Systems and solving', slug: 'guide/solving' },
+				{ label: 'Inequalities and optimization', slug: 'guide/optimization' },
 				{ label: 'Evolution equations', slug: 'guide/evolution' },
 				{ label: 'Integrations', slug: 'guide/integrations' },
 				{ label: 'Lean 4', slug: 'guide/lean' },

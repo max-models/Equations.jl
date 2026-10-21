@@ -7,6 +7,7 @@ using Test
     include("system.jl")
     include("problem.jl")
     include("solve.jl")
+    include("optimization.jl")
     include("evolution.jl")
     include("show.jl")
     include("lean.jl")

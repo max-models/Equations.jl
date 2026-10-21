@@ -29,6 +29,6 @@ are package extensions: they load automatically when the corresponding package i
 | [HomotopyContinuation.jl](https://www.juliahomotopycontinuation.org) | `AllRoots()` for all solutions of polynomial systems |
 | [GeometricIntegrators.jl](https://github.com/JuliaGNI/GeometricIntegrators.jl) | Geometric integrators (`Gauss(2)`, `SymplecticEulerA()`, …) for evolution equations and Hamiltonian systems |
 | [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl) | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution, `ClosedForm()` for exact solutions |
-| [JuMP.jl](https://github.com/jump-dev/JuMP.jl) | `add_constraint!(model, relation_or_system)` |
+| [JuMP.jl](https://github.com/jump-dev/JuMP.jl) | `add_constraint!(model, relation_or_system)`; `JuMPSolver(optimizer)` to minimize and find feasible points with JuMP optimizers |
 
 Next: the [guide](/Equations.jl/guide/relations/) or the [examples](/Equations.jl/examples/).

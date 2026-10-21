@@ -116,4 +116,5 @@ add_constraint!(model, EquationSystem(Equation(x[1], 0.5), Relation(>=, x[2], 0)
 ```
 
 See the [optimization example](/Equations.jl/examples/linear-program/) for a full model solved
-with HiGHS.
+with HiGHS. To let Equations.jl build the model, pass `JuMPSolver(optimizer)` to `minimize`,
+`maximize` or `solve` instead; see [Inequalities and optimization](/Equations.jl/guide/optimization/).

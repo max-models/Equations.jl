@@ -50,6 +50,13 @@ function Base.show(io::IO, ::MIME"text/plain", sol::Solution)
     print(io, "u: ", sol.u)
 end
 
+function Base.show(io::IO, ::MIME"text/plain", opt::Optimum)
+    println(io, "Optimum (", nameof(typeof(opt.alg)), ", retcode: ", opt.retcode, ", iterations: ", opt.iterations,
+        ", violation: ", opt.violation, ")")
+    println(io, "u: ", opt.u)
+    print(io, "objective: ", opt.objective)
+end
+
 function Base.show(io::IO, ::MIME"text/plain", prob::EquationProblem)
     println(io, "EquationProblem with unknowns ", unknowns(prob), " and starting values ", prob.u0)
     show(io, MIME"text/plain"(), prob.system)

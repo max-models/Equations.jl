@@ -10,6 +10,15 @@ using Equations, ForwardDiff, Test
     @test sol.retcode === :Success
     @test sol.u ≈ [1, 1] / √2
     @test solve(Equation(exp, 2), 0.0, NewtonMethod(ad=AutoForwardDiff())).u ≈ log(2)
+
+    # exact gradients for feasibility and optimization
+    disc = EquationSystem(Relation(<=, u -> u.x^2 + u.y^2, 1), Relation(>=, u -> u.x, 0.5))
+    feasible = solve(disc, (x=-2.0, y=2.0), Feasibility(ad=AutoForwardDiff()))
+    @test feasible.retcode === :Success && issatisfied(disc, feasible.u; atol=1e-10)
+    opt = minimize(u -> (u.x - 2)^2 + (u.y - 1)^2, (x=0.0, y=1.0), AugmentedLagrangian(ad=AutoForwardDiff());
+                   subject_to=Equation(u -> u.x^2 + u.y^2, 1))
+    @test opt.retcode === :Success
+    @test [opt.u.x, opt.u.y] ≈ [2, 1] / √5 atol = 1e-8
 end
 
 end
