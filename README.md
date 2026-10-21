@@ -53,6 +53,8 @@ minimize(u -> (u.x - 1)^2 + (u.y - 2)^2, (x=0.0, y=0.0);
 solve(Equation(∂ₜ, (t, u) -> -u), 1.0, (0.0, 1.0); dt=0.1).u[end]          # ≈ exp(-1)
 oscillator = Equation(∂ₜ, Hamiltonian((t, q, p) -> p^2 / 2 + q^2 / 2))
 solve(oscillator, (q=1.0, p=0.0), (0.0, 1000.0); dt=0.1)   # symplectic midpoint rule
+pendulum = Equation(∂ₜ, Lagrangian((t, q, v) -> v^2 / 2 + cos(q)))   # Euler–Lagrange equations
+solve(pendulum, (q=1.0, v=0.0), (0.0, 100.0); dt=0.1)      # variational integrator
 ```
 
 ## Integrations
@@ -67,7 +69,7 @@ Package extensions load automatically together with the corresponding package:
 | Roots.jl         | `solve(eq, (a, b), Roots.Brent())`, or any other Roots method for scalar equations |
 | Polynomials.jl   | Polynomial sides, and `solve(eq, AllRoots())` for all their complex roots        |
 | HomotopyContinuation.jl | `AllRoots()` for all solutions of polynomial systems                      |
-| GeometricIntegrators.jl | `solve(ivp, Gauss(2))`, `SymplecticEulerA()`, …: geometric integrators for evolution equations and Hamiltonian systems |
+| GeometricIntegrators.jl | `solve(ivp, Gauss(2))`, `SymplecticEulerA()`, `VPRKGauss(2)`, …: geometric and variational integrators for evolution equations, Hamiltonian and Lagrangian systems |
 | Symbolics.jl     | Conversion to and from `Symbolics.Equation`/`Inequality`, evaluation by substitution, and `ClosedForm()` for exact solutions |
 | JuMP.jl          | `add_constraint!(model, relation_or_system)`; `JuMPSolver(optimizer)` for `minimize` and feasibility |
 
@@ -150,9 +152,10 @@ GeometricIntegrators.jl.
 - [ ] Implicit ODEs (`IODE`)
 - [x] Hamiltonian ODEs (`HODE`), from a Hamiltonian `H(t, q, p)`: symplectic and Gauss–Legendre Runge–Kutta, symplectic Euler, Lobatto IIIA–IIIB, the built-in midpoint rule
 - [ ] Partitioned ODEs (`PODE`) in general
-- [ ] Lagrangian ODEs (`LODE`) and variational integrators (VPRK, degenerate variational integrators)
-- [ ] Euler–Lagrange and Hamilton's equations generated from a Lagrangian or Hamiltonian (EulerLagrange.jl)
-- [ ] Discrete Euler–Lagrange equations (`DELE`)
+- [x] Lagrangian ODEs (`LODE`) and variational integrators: `Equation(∂ₜ, Lagrangian(L))`, the built-in `VariationalMidpoint`, and GeometricIntegrators.jl's VPRK methods
+- [ ] Degenerate Lagrangians and their variational integrators
+- [x] Euler–Lagrange equations generated from a Lagrangian, numerically for any `L(t, q, v)` (and symbolically with EulerLagrange.jl, see the double pendulum example)
+- [x] Discrete Euler–Lagrange equations of the midpoint discrete Lagrangian (`VariationalMidpoint`)
 - [ ] Split ODEs (`SODE`): splitting and composition methods (Lie–Trotter, Strang, higher order)
 - [ ] Constrained systems (`DAE`, `PDAE`, `HDAE`, `IDAE`, `LDAE`): SPARK methods and projections onto the constraints
 - [ ] Stochastic systems (`SDE`, `PSDE`, `SPSDE`): stochastic symplectic and variational integrators (StochasticIntegrators.jl)
@@ -161,7 +164,7 @@ GeometricIntegrators.jl.
 - [ ] Poincaré integral invariants (PoincareInvariants.jl)
 - [ ] Hamiltonian PDEs through discretised Poisson brackets (GeometricBrackets.jl)
 - [ ] Ensembles of initial conditions and parameters
-- [ ] The test problems of GeometricProblems.jl (harmonic oscillator, pendulum, Kepler, Lotka–Volterra, …) as examples
+- [ ] The test problems of GeometricProblems.jl (harmonic oscillator, pendulum, Kepler, Lotka–Volterra, …) as examples (partly: the double pendulum)
 - [ ] Structure-preserving learned models: symplectic networks, symplectic autoencoders (GeometricMachineLearning.jl)
 - [ ] SimpleSolvers.jl as a nonlinear-solver backend for `solve`
 
@@ -190,7 +193,7 @@ The [JuliaPlasma](https://github.com/JuliaPlasma) packages build on the geometri
 - [ ] Functional equations (`f(x + y) = f(x) f(y)`, …)
 
 ### Calculus of variations and control
-- [ ] Euler–Lagrange equations from a functional (for mechanics: EulerLagrange.jl, below)
+- [ ] Euler–Lagrange equations from a functional (partly: for mechanics, `Lagrangian(L)`)
 - [ ] Optimal control problems
 - [ ] Hamilton–Jacobi–Bellman equations
 

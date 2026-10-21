@@ -19,6 +19,14 @@ using Equations, ForwardDiff, Test
                    subject_to=Equation(u -> u.x^2 + u.y^2, 1))
     @test opt.retcode === :Success
     @test [opt.u.x, opt.u.y] ≈ [2, 1] / √5 atol = 1e-8
+
+    # exact second derivatives for the Euler–Lagrange equations of a Lagrangian
+    γ = 0.2
+    ω = sqrt(1 - γ^2 / 4)
+    damped = Equation(∂ₜ, Lagrangian((t, q, v) -> exp(γ * t) * (v^2 / 2 - q^2 / 2)))
+    exact = exp(-γ * 5 / 2) * (cos(5ω) + γ / 2ω * sin(5ω))
+    @test solve(damped, (q=1.0, v=0.0), (0.0, 5.0), RungeKutta4(); dt=0.01, ad=AutoForwardDiff()).u[end].q ≈ exact atol = 1e-9
+    @test solve(damped, (q=1.0, v=0.0), (0.0, 5.0); dt=0.01, ad=AutoForwardDiff()).u[end].q ≈ exact atol = 1e-4
 end
 
 end

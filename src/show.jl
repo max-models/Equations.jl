@@ -19,6 +19,7 @@ _side(side, _) = side
 _side(::Linear, ::Symbol) = "A*x"
 _side(::TimeDerivative, ::Symbol) = "∂ₜu"
 _side(::Hamiltonian, ::Symbol) = "J∇H(q, p)"
+_side(::Lagrangian, ::Symbol) = "∂L/∂q"
 _side(f::Function, default::Symbol) = string(startswith(string(nameof(f)), '#') ? default : nameof(f), "(x)")
 
 function Base.show(io::IO, r::Relation)
@@ -27,6 +28,7 @@ end
 
 # Evolution equations: the right-hand side is a function of time and the unknowns.
 function Base.show(io::IO, r::Relation{EqualTo,TimeDerivative})
+    r.rhs isa Lagrangian && return print(io, "d/dt ∂L/∂v = ∂L/∂q")
     rhs = r.rhs isa Hamiltonian ? _side(r.rhs, :f) :
           r.rhs isa Function && !startswith(string(nameof(r.rhs)), '#') ? string(nameof(r.rhs), "(t, u)") : "f(t, u)"
     print(io, "∂ₜu = ", rhs)
