@@ -62,4 +62,51 @@
         # ODEs too
         @test solve(decay, 1.0, (0.0, 1.0), MidpointRule(); dt=0.01).u[end] ≈ exp(-1) rtol = 1e-4
     end
+
+    @testset "Lagrangian systems" begin
+        harmonic = Equation(∂ₜ, Lagrangian((t, q, v) -> v^2 / 2 - q^2 / 2))
+        @test sprint(show, harmonic) == "d/dt ∂L/∂v = ∂L/∂q"
+        prob = InitialValueProblem(harmonic, (q=1.0, v=0.0), (0.0, 2π); dt=0.01)
+        @test default_algorithm(prob) isa VariationalMidpoint
+        @test_throws ArgumentError InitialValueProblem(harmonic, (q=1.0, p=0.0), (0.0, 1.0); dt=0.1)
+        @test_throws DimensionMismatch InitialValueProblem(harmonic, (q=[1.0], v=[0.0, 1.0]), (0.0, 1.0); dt=0.1)
+        @test_throws ArgumentError solve(oscillator, (q=1.0, p=0.0), (0.0, 1.0), VariationalMidpoint(); dt=0.1)
+
+        # the variational integrator, the default: one period of the harmonic oscillator, order 2
+        sol = solve(prob)
+        @test sol.alg isa VariationalMidpoint
+        @test sol.retcode === :Success
+        @test sol.u[1] == (q=1.0, v=0.0)
+        @test sol.u[end].q ≈ 1 atol = 1e-6
+        @test sol.u[end].v ≈ 0 atol = 1e-4
+        errors = [abs(solve(harmonic, (q=1.0, v=0.0), (0.0, 1.0); dt).u[end].q - cos(1)) for dt in (0.1, 0.05)]
+        @test 3.5 < errors[1] / errors[2] < 4.5
+
+        # the Euler–Lagrange equations as a first-order system: RK4 and the midpoint rule on them
+        @test vector_field(prob)(0.0, [0.3, 0.5]) ≈ [0.5, -0.3] atol = 1e-7
+        @test solve(prob, RungeKutta4()).u[end].q ≈ 1 atol = 1e-7
+        @test solve(prob, MidpointRule()).u[end].q ≈ 1 atol = 1e-5
+
+        # a time-dependent Lagrangian: e^{γt}(v²/2 - q²/2) is the damped oscillator q̈ + γq̇ + q = 0
+        γ = 0.2
+        ω = sqrt(1 - γ^2 / 4)
+        damped = Equation(∂ₜ, Lagrangian((t, q, v) -> exp(γ * t) * (v^2 / 2 - q^2 / 2)))
+        exact = exp(-γ * 5 / 2) * (cos(5ω) + γ / 2ω * sin(5ω))
+        @test solve(damped, (q=1.0, v=0.0), (0.0, 5.0); dt=0.01).u[end].q ≈ exact atol = 1e-4
+        @test solve(damped, (q=1.0, v=0.0), (0.0, 5.0), RungeKutta4(); dt=0.01).u[end].q ≈ exact atol = 1e-7
+
+        # vector unknowns: a central force conserves the angular momentum, exactly for the
+        # variational integrator (Noether's theorem holds for the discrete equations)
+        central = Equation(∂ₜ, Lagrangian((t, q, v) -> sum(abs2, v) / 2 + 1 / sqrt(sum(abs2, q))))
+        orbit = solve(central, (q=[1.0, 0.0], v=[0.0, 1.2]), (0.0, 50.0); dt=0.05)
+        @test orbit.u[end] isa NamedTuple{(:q, :v)}
+        Lz(u) = u.q[1] * u.v[2] - u.q[2] * u.v[1]
+        @test maximum(u -> abs(Lz(u) - 1.2), orbit.u) < 1e-8
+
+        # a bounded energy error over a long time
+        pendulum = Equation(∂ₜ, Lagrangian((t, q, v) -> v^2 / 2 + cos(q)))
+        E(u) = u.v^2 / 2 - cos(u.q)
+        long = solve(pendulum, (q=1.0, v=0.0), (0.0, 500.0); dt=0.1)
+        @test maximum(u -> abs(E(u) - E(long.u[1])), long.u) < 1e-3
+    end
 end

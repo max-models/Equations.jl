@@ -22,8 +22,8 @@ export EquationSystem, equalities, inequalities
 export EquationProblem, Linear, unknowns, residual_function, linear_system
 export solve, default_algorithm, AbstractEquationAlgorithm, NewtonMethod, Bisection, DirectLinear, AllRoots, ClosedForm, Solution
 export Feasibility, minimize, maximize, Optimum, AugmentedLagrangian, JuMPSolver
-export TimeDerivative, ∂ₜ, Hamiltonian, InitialValueProblem, vector_field, Trajectory
-export AbstractTimeStepper, RungeKutta4, MidpointRule
+export TimeDerivative, ∂ₜ, Hamiltonian, Lagrangian, InitialValueProblem, vector_field, Trajectory
+export AbstractTimeStepper, RungeKutta4, MidpointRule, VariationalMidpoint
 export add_constraint!
 export lean, leanvariables, lean_theorem, lean_check, lean_file
 export AutoFiniteDiff, AutoForwardDiff
